@@ -83,7 +83,7 @@ public class Vector2f {
 	public Vector2f normalize() {
 		float x = length();
 		if (x == 0) {
-			return this;
+			return set(1, 0);
 		}
 		scale(1 / x);
 		return this;
@@ -111,10 +111,10 @@ public class Vector2f {
 		return Objects.hash(x, y);
 	}
 
-	public void set(float x, float y) {
+	public Vector2f set(float x, float y) {
 		this.x = x;
 		this.y = y;
-
+		return this;
 	}
 
 	public Vector2f set(Vector2f newPosition) {

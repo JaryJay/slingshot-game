@@ -7,17 +7,22 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import event.GameEventSerializer;
+import event.clienttoserver.ClientToServerGameEvent;
 import event.servertoclient.ServerToClientGameEvent;
+import util.LimitedQueue;
 
 public class ClientEventReceiver implements Runnable {
 
 	private DatagramSocket socket;
 	private ClientSideEventHandler eventHandler;
 	private boolean ended;
+	private LimitedQueue<ClientToServerGameEvent> ctsEventBuffer;
 
-	public ClientEventReceiver(DatagramSocket socket, ClientSideEventHandler eventHandler) {
+	public ClientEventReceiver(DatagramSocket socket, ClientSideEventHandler eventHandler,
+			LimitedQueue<ClientToServerGameEvent> ctsEventBuffer) {
 		this.socket = socket;
 		this.eventHandler = eventHandler;
+		this.ctsEventBuffer = ctsEventBuffer;
 	}
 
 	@Override
