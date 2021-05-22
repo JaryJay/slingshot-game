@@ -8,6 +8,7 @@ public class GameData {
 
 	private LimitedQueue<ImmutableGameState> pastStates;
 	private MutableGameState currentState;
+	private int currentScreen = 1;
 
 	public LimitedQueue<ImmutableGameState> getPastStates() {
 		return pastStates;
@@ -19,6 +20,14 @@ public class GameData {
 
 	public void setCurrentState(MutableGameState currentState) {
 		this.currentState = currentState;
+	}
+
+	public int getCurrentScreen() {
+		return currentScreen;
+	}
+
+	public void setCurrentScreen(int currentScreen) {
+		this.currentScreen = currentScreen;
 	}
 
 }
