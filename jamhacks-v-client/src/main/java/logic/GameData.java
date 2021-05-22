@@ -1,15 +1,24 @@
 package logic;
 
-import java.util.List;
-
-import state.GameState;
+import state.ImmutableGameState;
+import state.MutableGameState;
+import util.LimitedQueue;
 
 public class GameData {
 
-	private List<GameState> states;
+	private LimitedQueue<ImmutableGameState> pastStates;
+	private MutableGameState currentState;
 
-	public List<GameState> getStates() {
-		return states;
+	public LimitedQueue<ImmutableGameState> getPastStates() {
+		return pastStates;
+	}
+
+	public MutableGameState getCurrentState() {
+		return currentState;
+	}
+
+	public void setCurrentState(MutableGameState currentState) {
+		this.currentState = currentState;
 	}
 
 }

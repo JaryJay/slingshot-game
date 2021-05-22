@@ -1,5 +1,7 @@
 package logic;
 
+import state.MutableGameState;
+
 public class GameLogic {
 	private GameData data;
 
@@ -8,7 +10,8 @@ public class GameLogic {
 	}
 
 	public void update() {
-		System.out.println(data);
-		// TODO
+		MutableGameState currentState = data.getCurrentState();
+		data.getPastStates().add(currentState.immutable());
+		data.setCurrentState(currentState.getNextState());
 	}
 }
