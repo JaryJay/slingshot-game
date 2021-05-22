@@ -1,7 +1,6 @@
 package map;
 
 import math.Vector2f;
-import processing.core.PApplet;
 
 public class RectangularObstacle extends GameObstacle {
 
@@ -12,11 +11,7 @@ public class RectangularObstacle extends GameObstacle {
 
 	public RectangularObstacle(Vector2f position, Vector2f dimensions) {
 		// TODO
-		super(new RectangularObstacleHitbox(position, dimensions), null, position, dimensions);
-	}
-
-	public void display(PApplet p) {
-		p.image(image, position.x, position.y, dimensions.x, dimensions.y);
+		super(new RectangularObstacleHitbox(position, dimensions), "../jamhacks-v-common/src/main/resources/obstacleImage.jpg", position, dimensions);
 	}
 
 }
