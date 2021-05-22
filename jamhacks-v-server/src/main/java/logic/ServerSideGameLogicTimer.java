@@ -16,11 +16,11 @@ import event.servertoclient.STCTestGameEvent;
 import network.ClientDetails;
 import network.ClientToServerRequest;
 import network.ServerToClientResponse;
-import state.GameState;
+import state.MutableGameState;
 import util.id.IdGenerator;
 
 /**
- * The timer that updates a server side {@link GameState} a fixed number of
+ * The timer that updates a server side {@link MutableGameState} a fixed number of
  * times a second.
  * 
  * @author Jay
@@ -28,7 +28,7 @@ import util.id.IdGenerator;
  */
 public class ServerSideGameLogicTimer implements Runnable {
 
-	private volatile GameState state = new GameState();
+	private volatile MutableGameState state = new MutableGameState();
 	private List<ClientDetails> clientDetails;
 	private Queue<ClientToServerRequest> requests;
 	private Queue<ServerToClientResponse> responses;
@@ -112,11 +112,11 @@ public class ServerSideGameLogicTimer implements Runnable {
 		}
 	}
 
-	public GameState getState() {
+	public MutableGameState getState() {
 		return state;
 	}
 
-	public void setState(GameState state) {
+	public void setState(MutableGameState state) {
 		this.state = state;
 	}
 

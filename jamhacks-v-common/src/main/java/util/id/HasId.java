@@ -17,11 +17,4 @@ public interface HasId {
 	 */
 	public abstract long getId();
 
-	/**
-	 * Sets the ID.
-	 * 
-	 * @param id the ID to set
-	 */
-	public abstract void setId(long id);
-
 }

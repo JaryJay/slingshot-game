@@ -56,7 +56,6 @@ public abstract class GameEvent implements HasId, Serializable {
 		return id;
 	}
 
-	@Override
 	public void setId(long id) {
 		this.id = id;
 	}

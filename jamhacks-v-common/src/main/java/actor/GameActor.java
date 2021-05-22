@@ -97,7 +97,6 @@ public abstract class GameActor implements HasId, Updatable, Serializable {
 		return id;
 	}
 
-	@Override
 	public void setId(long id) {
 		this.id = id;
 	}
