@@ -8,20 +8,20 @@ import java.util.Queue;
 
 import event.GameEventSerializer;
 import event.clienttoserver.ClientToServerGameEvent;
-import util.LimitedQueue;
 
 public class ClientEventSender implements Runnable {
 
 	private boolean ended;
-	private LimitedQueue<ClientToServerGameEvent> ctsEventBuffer;
+	private Queue<ClientToServerGameEvent> ctsEventBuffer;
 	private DatagramSocket socket;
 	private InetAddress destinationIp;
 
-	public ClientEventSender(DatagramSocket socket, InetAddress destinationIp) {
+	public ClientEventSender(DatagramSocket socket, InetAddress destinationIp,
+			Queue<ClientToServerGameEvent> eventList) {
 		this.socket = socket;
 		this.destinationIp = destinationIp;
 		ended = false;
-		ctsEventBuffer = new LimitedQueue<>(50);
+		ctsEventBuffer = eventList;
 	}
 
 	@Override
@@ -47,6 +47,10 @@ public class ClientEventSender implements Runnable {
 
 	public Queue<ClientToServerGameEvent> getCtsEventBuffer() {
 		return ctsEventBuffer;
+	}
+
+	public void addEvent(ClientToServerGameEvent event) {
+		this.ctsEventBuffer.add(event);
 	}
 
 	public void close() {

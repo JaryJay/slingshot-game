@@ -1,14 +1,14 @@
 package app;
 
 import java.awt.event.KeyEvent;
+import java.util.Queue;
 
+import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
 import logic.GameData;
-import logic.GameLogic;
 import logic.GameLogicTimer;
-import logic.TimeAccumulator;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
@@ -26,13 +26,16 @@ public class GameSketch extends PApplet {
 	private String textInput = "";
 	private String username = "";
 	private int unsernameIndent;
+	private boolean sentTest;
+	private Queue<AbstractGameInputEvent> inputBuffer;
 
-	public GameSketch(int windowLength, int windowHeight) {
+	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer) {
 		this.windowLength = windowLength;
 		this.windowHeight = windowHeight;
 		data = new GameData();
-		timer = new GameLogicTimer(new GameLogic(data), new TimeAccumulator());
+		// timer = new GameLogicTimer(new GameLogic(data), new TimeAccumulator());
 		screen = 1;
+		this.inputBuffer = inputBuffer;
 	}
 
 	@Override
@@ -67,22 +70,16 @@ public class GameSketch extends PApplet {
 		runSketch(processingArgs, this);
 	}
 
+	private boolean wPressed;
+	private boolean aPressed;
+	private boolean sPressed;
+	private boolean dPressed;
+
 	@Override
 	public void keyPressed() {
-		KeyPressedEvent KeyPressedGameInputEvent;
-		if (keyCode == KeyEvent.VK_W) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
-		} else if (keyCode == KeyEvent.VK_A) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
-		} else if (keyCode == KeyEvent.VK_S) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
-		} else if (keyCode == KeyEvent.VK_D) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
-		} else if (keyCode == KeyEvent.VK_R) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
-		}
+		if (key == '\n' && textInput.length() > 0)
 
-		if (key == '\n' && textInput.length() > 0) {
+		{
 			username = textInput;
 			textInput = "";
 			data.setCurrentScreen(2);
@@ -94,13 +91,45 @@ public class GameSketch extends PApplet {
 		{
 			textInput = textInput + key;
 		}
+		if (keyCode == KeyEvent.VK_W) {
+			if (this.wPressed)
+				return;
+			this.wPressed = true;
+		} else if (keyCode == KeyEvent.VK_A) {
+			if (this.aPressed)
+				return;
+			this.aPressed = true;
+		} else if (keyCode == KeyEvent.VK_S) {
+			if (this.sPressed)
+				return;
+			this.sPressed = true;
+		} else if (keyCode == KeyEvent.VK_D) {
+			if (this.dPressed)
+				return;
+			this.dPressed = true;
+		} else {
+			return;
+		}
+		KeyPressedEvent keyPressedEvent = new KeyPressedEvent(keyCode);
+		inputBuffer.add(keyPressedEvent);
+	}
 
+	@Override
+	public void keyReleased() {
+		if (keyCode == KeyEvent.VK_W) {
+			this.wPressed = false;
+		} else if (keyCode == KeyEvent.VK_A) {
+			this.aPressed = false;
+		} else if (keyCode == KeyEvent.VK_S) {
+			this.sPressed = false;
+		} else if (keyCode == KeyEvent.VK_D) {
+			this.dPressed = false;
+		}
 	}
 
 	@Override
 	public void mousePressed() {
 		MousePressedGameInputEvent MousePressedEvent = new MousePressedGameInputEvent(mouseX, mouseY);
-
 	}
 
 	@Override
