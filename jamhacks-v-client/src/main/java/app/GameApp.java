@@ -40,7 +40,7 @@ public class GameApp {
 		LimitedQueue<ClientToServerGameEvent> ctsEventBuffer = new LimitedQueue<>(50);
 //		ClientEventSender clientEventSender = new ClientEventSender(null, null, ctsEventBuffer)
 
-		GameSketch sketch = new GameSketch(800, 800, inputBuffer);
+		GameSketch sketch = new GameSketch(960, 720, inputBuffer);
 		sketch.run();
 	}
 
