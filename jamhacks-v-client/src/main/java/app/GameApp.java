@@ -1,8 +1,5 @@
 package app;
 
-import logic.GameData;
-import logic.GameLogic;
-
 public class GameApp {
 
 	public static void main(String[] args) {
@@ -31,9 +28,8 @@ public class GameApp {
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		}
-		GameData data = new GameData();
-		GameLogic logic = new GameLogic(null);
-		logic.update();
+		GameSketch sketch = new GameSketch(800, 800);
+		sketch.run();
 	}
 
 }

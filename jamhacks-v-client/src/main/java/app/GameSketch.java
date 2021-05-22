@@ -1,5 +1,10 @@
 package app;
 
+import java.awt.event.KeyEvent;
+
+import event.input.KeyPressedEvent;
+import event.input.MousePressedGameInputEvent;
+import event.input.MouseReleasedGameInputEvent;
 import processing.core.PApplet;
 
 public class GameSketch extends PApplet {
@@ -32,6 +37,34 @@ public class GameSketch extends PApplet {
 	public void run() {
 		String[] processingArgs = { "lol" };
 		runSketch(processingArgs, this);
+	}
+
+	@Override
+	public void keyPressed() {
+		KeyPressedEvent KeyPressedGameInputEvent;
+		if (keyCode == KeyEvent.VK_W) {
+			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+		} else if (keyCode == KeyEvent.VK_A) {
+			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+		} else if (keyCode == KeyEvent.VK_S) {
+			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+		} else if (keyCode == KeyEvent.VK_D) {
+			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+		} else if (keyCode == KeyEvent.VK_R) {
+			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+		}
+
+	}
+
+	@Override
+	public void mousePressed() {
+		MousePressedGameInputEvent MousePressedEvent = new MousePressedGameInputEvent(mouseX, mouseY);
+
+	}
+
+	@Override
+	public void mouseReleased() {
+		MouseReleasedGameInputEvent MouseReleasedEvent = new MouseReleasedGameInputEvent(mouseX, mouseY);
 	}
 
 }

@@ -1,6 +1,6 @@
 package event.input;
 
-public class KeyPressedGameInputEvent extends AbstractGameInputEvent {
+public class KeyPressedEvent extends AbstractGameInputEvent {
 
 	/**
 	 * 
@@ -8,7 +8,7 @@ public class KeyPressedGameInputEvent extends AbstractGameInputEvent {
 	private static final long serialVersionUID = 6614791829054665219L;
 	private int keyCode;
 
-	public KeyPressedGameInputEvent(int keyCode) {
+	public KeyPressedEvent(int keyCode) {
 		this.keyCode = keyCode;
 	}
 
