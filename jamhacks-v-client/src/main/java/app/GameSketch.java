@@ -29,8 +29,8 @@ public class GameSketch extends PApplet {
 		}
 	}
 
-	public void run(String string) {
-		String[] processingArgs = { string };
+	public void run() {
+		String[] processingArgs = { "lol" };
 		runSketch(processingArgs, this);
 	}
 
