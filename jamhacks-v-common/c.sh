@@ -9,3 +9,4 @@ cd ..\jamhacks-v-server
 mvn clean install
 mvn eclipse:clean
 mvn eclipse:eclipse
+cd ..\jamhacks-v-common

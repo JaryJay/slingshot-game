@@ -1,7 +1,7 @@
 <project>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>jamhacks-v</groupId>
-	<artifactId>slingshot-game-client</artifactId>
+	<artifactId>jamhacks-v-client</artifactId>
 	<version>1</version>
 
 	<properties>
@@ -13,7 +13,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>jamhacks-v</groupId>
-			<artifactId>slingshot-game-common</artifactId>
+			<artifactId>jamhacks-v-common</artifactId>
 			<version>1</version>
 		</dependency>
 	</dependencies>
