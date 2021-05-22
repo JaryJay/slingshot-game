@@ -6,7 +6,7 @@ public class KeyPressedEvent extends AbstractGameInputEvent {
 	 * 
 	 */
 	private static final long serialVersionUID = 6614791829054665219L;
-	private int keyCode;
+	public int keyCode;
 
 	public KeyPressedEvent(int keyCode) {
 		this.keyCode = keyCode;
