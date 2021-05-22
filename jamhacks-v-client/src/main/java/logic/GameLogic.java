@@ -1,19 +1,14 @@
 package logic;
 
-import java.util.List;
-
-import state.GameState;
-
 public class GameLogic {
+	private GameData data;
 
-	private List<GameState> states;
+	public GameLogic(GameData data) {
+		this.data = data;
+	}
 
 	public void update() {
+		System.out.println(data);
 		// TODO
 	}
-
-	public List<GameState> getStates() {
-		return states;
-	}
-
 }
