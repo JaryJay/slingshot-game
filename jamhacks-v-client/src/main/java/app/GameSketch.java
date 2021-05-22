@@ -1,7 +1,9 @@
 package app;
 
 import java.awt.event.KeyEvent;
+import java.util.Queue;
 
+import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
@@ -12,10 +14,12 @@ public class GameSketch extends PApplet {
 	private int windowLength;
 	private int windowHeight;
 	private boolean sentTest;
+	private Queue<AbstractGameInputEvent> inputBuffer;
 
-	public GameSketch(int windowLength, int windowHeight) {
+	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer) {
 		this.windowLength = windowLength;
 		this.windowHeight = windowHeight;
+		this.inputBuffer = inputBuffer;
 	}
 
 	@Override
@@ -39,32 +43,56 @@ public class GameSketch extends PApplet {
 		runSketch(processingArgs, this);
 	}
 
+	private boolean wPressed;
+	private boolean aPressed;
+	private boolean sPressed;
+	private boolean dPressed;
+
 	@Override
 	public void keyPressed() {
-		KeyPressedEvent KeyPressedGameInputEvent;
 		if (keyCode == KeyEvent.VK_W) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+			if (this.wPressed)
+				return;
+			this.wPressed = true;
 		} else if (keyCode == KeyEvent.VK_A) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+			if (this.aPressed)
+				return;
+			this.aPressed = true;
 		} else if (keyCode == KeyEvent.VK_S) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+			if (this.sPressed)
+				return;
+			this.sPressed = true;
 		} else if (keyCode == KeyEvent.VK_D) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
-		} else if (keyCode == KeyEvent.VK_R) {
-			KeyPressedGameInputEvent = new KeyPressedEvent(keyCode);
+			if (this.dPressed)
+				return;
+			this.dPressed = true;
+		} else {
+			return;
 		}
+		KeyPressedEvent keyPressedEvent = new KeyPressedEvent(keyCode);
+		inputBuffer.add(keyPressedEvent);
+	}
 
+	@Override
+	public void keyReleased() {
+		if (keyCode == KeyEvent.VK_W) {
+			this.wPressed = false;
+		} else if (keyCode == KeyEvent.VK_A) {
+			this.aPressed = false;
+		} else if (keyCode == KeyEvent.VK_S) {
+			this.sPressed = false;
+		} else if (keyCode == KeyEvent.VK_D) {
+			this.dPressed = false;
+		}
 	}
 
 	@Override
 	public void mousePressed() {
 		MousePressedGameInputEvent MousePressedEvent = new MousePressedGameInputEvent(mouseX, mouseY);
-
 	}
 
 	@Override
 	public void mouseReleased() {
 		MouseReleasedGameInputEvent MouseReleasedEvent = new MouseReleasedGameInputEvent(mouseX, mouseY);
 	}
-
 }

@@ -1,8 +1,16 @@
 package app;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
+import event.clienttoserver.ClientToServerGameEvent;
+import event.input.AbstractGameInputEvent;
+import util.LimitedQueue;
+
 public class GameApp {
 
 	public static void main(String[] args) {
+		Queue<AbstractGameInputEvent> inputBuffer = new LinkedList<>();
 //		DatagramSocket socket = null;
 //		InetAddress destinationAddress = null;
 //		ClientEventSender sender = null;
@@ -28,7 +36,11 @@ public class GameApp {
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		}
-		GameSketch sketch = new GameSketch(800, 800);
+
+		LimitedQueue<ClientToServerGameEvent> ctsEventBuffer = new LimitedQueue<>(50);
+//		ClientEventSender clientEventSender = new ClientEventSender(null, null, ctsEventBuffer)
+
+		GameSketch sketch = new GameSketch(800, 800, inputBuffer);
 		sketch.run();
 	}
 
