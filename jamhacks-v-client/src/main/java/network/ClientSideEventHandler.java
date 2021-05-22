@@ -1,22 +1,18 @@
 package network;
 
-import java.util.Optional;
-
-import event.servertoclient.STCTestGameEvent;
+import event.clienttoserver.CTSAcknowledgmentEvent;
+import event.clienttoserver.ClientToServerGameEvent;
+import event.servertoclient.STCInputForwardEvent;
 import event.servertoclient.ServerToClientGameEvent;
-import event.servertoclient.ConnectionAcceptanceEvent;
+import util.id.IdGenerator;
 
 public class ClientSideEventHandler {
 
-	public Optional<byte[]> handle(ServerToClientGameEvent event) {
-		if (event instanceof ConnectionAcceptanceEvent) {
-//			timer.getState().getIdToActors().put
-			return Optional.empty();
-		} else if (event instanceof STCTestGameEvent) {
-			System.out.println("[Message received]: " + event.getDescription());
-			return Optional.empty();
+	public ClientToServerGameEvent handle(ServerToClientGameEvent event) {
+		if (event instanceof STCInputForwardEvent) {
+			return new CTSAcknowledgmentEvent(event.getId(), IdGenerator.generateEventId(), System.currentTimeMillis());
 		}
-		return Optional.empty();
+		return null;
 	}
 
 }
