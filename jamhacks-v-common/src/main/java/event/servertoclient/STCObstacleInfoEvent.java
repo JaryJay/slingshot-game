@@ -8,14 +8,14 @@ public class STCObstacleInfoEvent extends ServerToClientGameEvent {
 	 * 
 	 */
 	private static final long serialVersionUID = -8883003231112667684L;
-	private GameObstacle[] obstacles;
+	private GameObstacle obstacle;
 
-	public STCObstacleInfoEvent(GameObstacle[] obstacles) {
-		this.obstacles = obstacles;
+	public STCObstacleInfoEvent(GameObstacle obstacle) {
+		this.obstacle = obstacle;
 	}
 
-	public GameObstacle[] getObstacles() {
-		return obstacles;
+	public GameObstacle getObstacles() {
+		return obstacle;
 	}
 
 	@Override
