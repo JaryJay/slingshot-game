@@ -11,6 +11,7 @@ import event.clienttoserver.InputFrameEvent;
 import event.input.AbstractGameInputEvent;
 import event.input.GameInputFrame;
 import event.input.KeyPressedGameInputEvent;
+import event.input.MouseDraggedGameInputEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
 import event.inputfactory.AimEvent;
@@ -32,7 +33,8 @@ public class SlingShotLogic extends GameLogic {
 	private Vector2f mousePosOnClick;
 	private long lastShot = 0;
 
-	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
+			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.data = (SlingShotData) data;
 		if (this.data.getCurrentInputFrame() == null) {
@@ -86,7 +88,8 @@ public class SlingShotLogic extends GameLogic {
 		MouseReleasedGameInputEvent mouseReleasedEvent = (MouseReleasedGameInputEvent) inputEvent;
 
 		if (this.aimingShot) {
-			Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x, mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
+			Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x,
+					mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
 			float distance = (float) Math.sqrt((aimVector.x * aimVector.x) + (aimVector.y * aimVector.y));
 			float strength = distance / 20; // TODO
 		}
@@ -103,6 +106,18 @@ public class SlingShotLogic extends GameLogic {
 				return new AimEvent(mousePosOnClick); // TODO, not supposed to be mousePosOnClick
 			}
 		}
+		return null;
+	}
+
+	private AimEvent handleMouseDragged(AbstractGameInputEvent inputEvent) {
+		MouseDraggedGameInputEvent mouseDraggedEvent = (MouseDraggedGameInputEvent) inputEvent;
+
+		if (this.aimingShot) {
+			AimEvent aimEvent = new AimEvent(mouseDraggedEvent.GetCurrentMousePos());
+
+			return aimEvent;
+		}
+
 		return null;
 	}
 
@@ -125,6 +140,31 @@ public class SlingShotLogic extends GameLogic {
 			velocityChangeEvent = new VelocityChangeEvent(5f, 0f);
 			break;
 		}
+		result = velocityChangeEvent;
+		return result;
+	}
+
+	private SophisticatedInputEvent handleKeyReleased(AbstractGameInputEvent inputEvent) {
+		SophisticatedInputEvent result;
+		VelocityChangeEvent velocityChangeEvent = null;
+
+		KeyPressedGameInputEvent keyPressedEvent = (KeyPressedGameInputEvent) inputEvent;
+
+		switch (keyPressedEvent.getKeyCode()) {
+		case KeyEvent.VK_W:
+			velocityChangeEvent = new VelocityChangeEvent(0f, 5f);
+			break;
+		case KeyEvent.VK_S:
+			velocityChangeEvent = new VelocityChangeEvent(0f, -5f);
+			break;
+		case KeyEvent.VK_A:
+			velocityChangeEvent = new VelocityChangeEvent(5f, 0f);
+			break;
+		case KeyEvent.VK_D:
+			velocityChangeEvent = new VelocityChangeEvent(-5f, 0f);
+			break;
+		}
+
 		result = velocityChangeEvent;
 		return result;
 	}
