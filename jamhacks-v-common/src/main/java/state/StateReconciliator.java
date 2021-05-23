@@ -28,7 +28,6 @@ public class StateReconciliator {
 		states.add(GameStateExtrapolator.getNextState(states.getLast(), inputFrames.getLast()));
 		inputFrames.add(new GameInputFrame(inputFrames.getLast().getFrame() + 1));
 		earliestDirtyFrame = states.size() - 1;
-		System.out.println("Simulating next state");
 	}
 
 	public void reloadInputFrame(GameInputFrame inputFrame) {

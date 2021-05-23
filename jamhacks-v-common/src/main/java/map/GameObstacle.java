@@ -12,7 +12,7 @@ public class GameObstacle implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4143004735978913564L;
-	protected String imageUrl;
+	protected transient String imageUrl;
 	protected transient PImage image;
 	protected Vector2f position;
 	protected Vector2f dimensions;

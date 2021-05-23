@@ -103,7 +103,7 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			responses.add(new ServerToClientResponse(request.getDetails(), obstacleInfo));
 			
 			Collection<GameActor> actors =state.getActorIdToActors().values();
-			GameActor[] actorsArr  = new GameActor[obstacles.size()];
+			GameActor[] actorsArr  = new GameActor[actors.size()];
 			int index = 0;
 			for (GameActor actor : actors) {
 				actorsArr[index] = actor;
