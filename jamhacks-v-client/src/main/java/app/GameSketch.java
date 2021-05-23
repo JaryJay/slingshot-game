@@ -76,7 +76,6 @@ public class GameSketch extends PApplet {
 		}
 	}
 
-	private long lastShot = 0;
 	private boolean mouseHeld;
 
 	@Override
@@ -93,6 +92,11 @@ public class GameSketch extends PApplet {
 		this.mouseHeld = false;
 		MouseReleasedGameInputEvent mouseReleasedEvent = new MouseReleasedGameInputEvent(mouseX, mouseY);
 		inputBuffer.add(mouseReleasedEvent);
+	}
+
+	@Override
+	public void mouseDragged() {
+
 	}
 
 }
