@@ -36,7 +36,7 @@ public class ClientNetworking implements Runnable {
 	public void run() {
 		new Thread(sender).start();
 		new Thread(receiver).start();
-		ClientToServerGameEvent event = new ConnectionRequestEvent(234, 123);
+		ClientToServerGameEvent event = new ConnectionRequestEvent();
 		sender.getCtsEventBuffer().add(event);
 	}
 

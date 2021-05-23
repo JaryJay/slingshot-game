@@ -1,14 +1,13 @@
 package event.inputfactory;
 
-import event.clienttoserver.ClientToServerGameEvent;
 import math.Vector2f;
 
-public class VelocityChangeEvent extends ClientToServerGameEvent {
+public class VelocityChangeEvent extends SophisticatedInputEvent {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4322031362243678381L;
+	private static final long serialVersionUID = -1435672838885949213L;
 	private Vector2f velocityVector;
 
 	public VelocityChangeEvent(float velocityX, float velocityY) {

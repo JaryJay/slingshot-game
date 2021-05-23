@@ -1,9 +1,8 @@
 package event.inputfactory;
 
-import event.clienttoserver.ClientToServerGameEvent;
 import math.Vector2f;
 
-public class ShootEvent extends ClientToServerGameEvent {
+public class ShootEvent extends SophisticatedInputEvent {
 
 	/**
 	 * 

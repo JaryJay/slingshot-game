@@ -6,6 +6,7 @@ import context.ContextPart;
 import data.GameData;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.input.AbstractGameInputEvent;
+import event.inputfactory.SophisticatedInputEvent;
 import event.servertoclient.ServerToClientGameEvent;
 
 public class GameLogic extends ContextPart {
@@ -27,18 +28,18 @@ public class GameLogic extends ContextPart {
 		handleAllSTCEvents();
 	}
 
-	protected ClientToServerGameEvent handleInputEvent(AbstractGameInputEvent rawInputEvent) {
+	protected SophisticatedInputEvent handleInputEvent(AbstractGameInputEvent rawInputEvent) {
 		return null;
 	}
 
-	protected void handleCTSGameEvent(ClientToServerGameEvent event) {
+	protected void handleSophisticatedInputEvent(SophisticatedInputEvent event) {
 	}
 
 	protected final void handleAllInputEvents() {
 		while (!inputBuffer.isEmpty()) {
 			AbstractGameInputEvent poll = inputBuffer.poll();
-			ClientToServerGameEvent returnEvent = handleInputEvent(poll);
-			handleCTSGameEvent(returnEvent);
+			SophisticatedInputEvent returnEvent = handleInputEvent(poll);
+			handleSophisticatedInputEvent(returnEvent);
 		}
 	}
 

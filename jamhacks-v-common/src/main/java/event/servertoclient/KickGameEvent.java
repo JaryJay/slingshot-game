@@ -9,15 +9,6 @@ public class KickGameEvent extends ServerToClientGameEvent {
 
 	private String reason;
 
-	public KickGameEvent(String reason) {
-		super();
-		this.reason = reason;
-	}
-
-	public KickGameEvent(long id, long timeSent) {
-		super(id, timeSent);
-	}
-
 	public String getReason() {
 		return reason;
 	}

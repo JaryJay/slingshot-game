@@ -11,14 +11,6 @@ public class ConnectionAcceptanceEvent extends ServerToClientGameEvent {
 	private long userId;
 	private GameState state;
 
-	public ConnectionAcceptanceEvent(GameState state) {
-		this.state = state;
-	}
-
-	public ConnectionAcceptanceEvent(long id, long timeSent) {
-		super(id, timeSent);
-	}
-
 	public long getUserId() {
 		return userId;
 	}

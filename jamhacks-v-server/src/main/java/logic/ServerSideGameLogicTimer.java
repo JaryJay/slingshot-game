@@ -61,7 +61,7 @@ public class ServerSideGameLogicTimer extends LogicTimer {
 		map.getObstacles().add(new RectangularObstacle(new Vector2f(200, 200), new Vector2f(300, 100)));
 		states = new LimitedQueue<>(50);
 		inputFrames = new LimitedQueue<>(50);
-		states.add(new GameState(0, map, new HashMap<>()));
+		states.add(new GameState(IdGenerator.generateEventId(), map, new HashMap<>()));
 	}
 
 	@Override
@@ -78,7 +78,6 @@ public class ServerSideGameLogicTimer extends LogicTimer {
 
 		// Updating as many times as needed to make up for any lag
 		while (accumulator >= targetFrameTime) {
-//			state.update(); // TODO
 			if (!requests.isEmpty()) {
 				ClientToServerRequest request = requests.poll();
 				handle(request);
@@ -112,10 +111,18 @@ public class ServerSideGameLogicTimer extends LogicTimer {
 			response.setUserId(IdGenerator.generateUserId());
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
 		} else if (event instanceof InputFrameEvent) {
-			inputFrames.add(((InputFrameEvent) event).getInputFrame());
-			for (ClientDetails details : clientDetails) {
-				responses.add(new ServerToClientResponse(details, ((InputFrameEvent) event).toSTCEvent()));
-			}
+			reconcileInputFrame((InputFrameEvent) event);
+		}
+	}
+
+	private void reconcileInputFrame(InputFrameEvent event) {
+		GameInputFrame latest = inputFrames.peek();
+		while (latest.getFrame() > event.getFrame()) {
+
+		}
+		inputFrames.add(event.getInputFrame());
+		for (ClientDetails details : clientDetails) {
+			responses.add(new ServerToClientResponse(details, event.toSTCEvent()));
 		}
 	}
 

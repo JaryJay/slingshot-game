@@ -10,6 +10,7 @@ import data.MainScreenData;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedGameInputEvent;
+import event.inputfactory.SophisticatedInputEvent;
 import event.servertoclient.ServerToClientGameEvent;
 import visuals.GameVisuals;
 import visuals.LoadingScreenVisuals;
@@ -23,7 +24,7 @@ public class MainScreenLogic extends GameLogic {
 	}
 
 	@Override
-	protected ClientToServerGameEvent handleInputEvent(AbstractGameInputEvent inputEvent) {
+	protected SophisticatedInputEvent handleInputEvent(AbstractGameInputEvent inputEvent) {
 		if (inputEvent instanceof KeyPressedGameInputEvent) {
 			KeyPressedGameInputEvent event = (KeyPressedGameInputEvent) inputEvent;
 			if (event.getKeyCode() == 10 && mainScreenData.getTextInput().length() > 0) {

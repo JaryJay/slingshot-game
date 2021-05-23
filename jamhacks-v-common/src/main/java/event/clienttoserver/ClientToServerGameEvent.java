@@ -7,15 +7,8 @@ public abstract class ClientToServerGameEvent extends GameEvent {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2919174582596358248L;
+	private static final long serialVersionUID = 1762350623235198097L;
 	private boolean acknowledged;
-
-	public ClientToServerGameEvent() {
-	}
-
-	public ClientToServerGameEvent(long id, long timeSent) {
-		super(id, timeSent);
-	}
 
 	@Override
 	public String getDescription() {

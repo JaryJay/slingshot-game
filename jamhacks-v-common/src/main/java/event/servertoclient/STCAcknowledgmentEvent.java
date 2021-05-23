@@ -12,10 +12,6 @@ public class STCAcknowledgmentEvent extends ServerToClientGameEvent {
 		this.idOfAcknowledgedEvent = idOfAcknowledgedEvent;
 	}
 
-	public STCAcknowledgmentEvent(long id, long timeSent) {
-		super(id, timeSent);
-	}
-
 	public long getIdOfAcknowledgedEvent() {
 		return idOfAcknowledgedEvent;
 	}

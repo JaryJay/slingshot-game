@@ -18,19 +18,16 @@ public abstract class GameEvent implements HasId, Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3724779955654356078L;
+	private static final long serialVersionUID = -3444985417139104855L;
 	/**
 	 * The id to be returned in getId().
 	 */
-	private long id;
-	private long timeSent;
+	protected long id;
+	protected long timeSent;
 
 	public GameEvent() {
-	}
-
-	public GameEvent(long id, long timeSent) {
-		this.id = id;
-		this.timeSent = timeSent;
+		id = IdGenerator.generateEventId();
+		timeSent = System.currentTimeMillis();
 	}
 
 	/**
@@ -54,10 +51,6 @@ public abstract class GameEvent implements HasId, Serializable {
 	@Override
 	public long getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public static final <T extends GameEvent> T generateEvent(Class<T> eventClass) {

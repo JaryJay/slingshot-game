@@ -5,14 +5,7 @@ public class CTSTestGameEvent extends ClientToServerGameEvent {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3850987639201790107L;
-
-	public CTSTestGameEvent() {
-	}
-
-	public CTSTestGameEvent(long id, long timeSent) {
-		super(id, timeSent);
-	}
+	private static final long serialVersionUID = -6399282862171381278L;
 
 	@Override
 	public String getDescription() {

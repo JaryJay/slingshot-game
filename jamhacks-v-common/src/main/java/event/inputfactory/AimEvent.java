@@ -1,29 +1,21 @@
 package event.inputfactory;
 
-import event.clienttoserver.ClientToServerGameEvent;
 import math.Vector2f;
 
-public class AimEvent extends ClientToServerGameEvent {
+public class AimEvent extends SophisticatedInputEvent {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6196191869943475614L;
-	private Vector2f mousePosOnClick;
-	private Vector2f currentMousePos;
+	private static final long serialVersionUID = -8800924315352743393L;
+	private Vector2f aimDirection;
 
-	public AimEvent(Vector2f mousePosOnClick, Vector2f currentMousePos) {
-		this.mousePosOnClick = mousePosOnClick;
-		this.currentMousePos = currentMousePos;
-
+	public AimEvent(Vector2f aimDirection) {
+		this.aimDirection = aimDirection;
 	}
 
-	public Vector2f getMousePosOnClick() {
-		return mousePosOnClick;
-	}
-
-	public Vector2f getCurrentMousePos() {
-		return currentMousePos;
+	public Vector2f getAimDirection() {
+		return aimDirection;
 	}
 
 }

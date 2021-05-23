@@ -5,10 +5,18 @@ import event.input.GameInputFrame;
 
 public class STCInputFrameEvent extends ServerToClientGameEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3682007618673029207L;
 	private GameInputFrame inputFrame;
 	private long frame;
 
 	public STCInputFrameEvent() {
+	}
+
+	public STCInputFrameEvent(long timeSent) {
+		this.timeSent = timeSent;
 	}
 
 	public long getFrame() {
@@ -17,10 +25,6 @@ public class STCInputFrameEvent extends ServerToClientGameEvent {
 
 	public void setFrame(long frame) {
 		this.frame = frame;
-	}
-
-	public STCInputFrameEvent(long id, long timeSent) {
-		super(id, timeSent);
 	}
 
 	public GameInputFrame getInputFrame() {

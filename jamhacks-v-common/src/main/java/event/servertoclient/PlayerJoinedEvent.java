@@ -14,10 +14,6 @@ public class PlayerJoinedEvent extends ServerToClientGameEvent {
 		this.newPlayer = newPlayer;
 	}
 
-	public PlayerJoinedEvent(long id, long timeSent) {
-		super(id, timeSent);
-	}
-
 	public Player getNewPlayer() {
 		return newPlayer;
 	}

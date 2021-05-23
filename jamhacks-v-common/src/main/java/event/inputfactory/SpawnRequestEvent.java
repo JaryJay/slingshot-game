@@ -1,9 +1,8 @@
 package event.inputfactory;
 
 import actor.Player;
-import event.clienttoserver.ClientToServerGameEvent;
 
-public class SpawnRequestEvent extends ClientToServerGameEvent {
+public class SpawnRequestEvent extends SophisticatedInputEvent {
 
 	/**
 	 * 
@@ -11,13 +10,6 @@ public class SpawnRequestEvent extends ClientToServerGameEvent {
 	private static final long serialVersionUID = 8447844140299508935L;
 	private long originalPlayerId;
 	private Player newPlayer;
-
-	public SpawnRequestEvent() {
-	}
-
-	public SpawnRequestEvent(long id, long timeSent) {
-		super(id, timeSent);
-	}
 
 	public long getOriginalPlayerId() {
 		return originalPlayerId;

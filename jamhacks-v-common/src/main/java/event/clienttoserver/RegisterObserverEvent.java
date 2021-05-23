@@ -5,14 +5,7 @@ public class RegisterObserverEvent extends ClientToServerGameEvent {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6567880124949370113L;
-
-	public RegisterObserverEvent() {
-	}
-
-	public RegisterObserverEvent(long id, long timeSent) {
-		super(id, timeSent);
-	}
+	private static final long serialVersionUID = 7651524839883748927L;
 
 	@Override
 	public String getDescription() {
