@@ -40,7 +40,7 @@ public class ClientEventReceiver implements Runnable {
 				e.printStackTrace();
 			}
 			ServerToClientGameEvent event = (ServerToClientGameEvent) GameEventSerializer.deserialize(packet.getData());
-//			System.out.println("[Message received]: " + event.getDescription() + " ID: " + event.getId());
+			System.out.println("[Message received]: " + event.getDescription() + " ID: " + event.getId());
 //			ClientToServerGameEvent response = eventHandler.handle(event);
 //			if (response != null) {
 //				ctsEventBuffer.add(response);
