@@ -18,7 +18,6 @@ public class LogicTimer extends TimestepTimer {
 
 	@Override
 	protected void doUpdate() {
-
 	}
 
 	public void end() {
