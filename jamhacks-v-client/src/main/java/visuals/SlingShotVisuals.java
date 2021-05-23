@@ -36,11 +36,13 @@ public class SlingShotVisuals extends GameVisuals {
 		}
 
 		GameMap map = state.getMap();
+		if (map == null) {
+			return;
+		}
 		for (GameObstacle obstacle : map.getObstacles()) {
 			if (obstacle instanceof RectangularObstacle) {
 				RectangularObstacle rObstacle = (RectangularObstacle) obstacle;
-				p.rect(rObstacle.getPosition().x, rObstacle.getPosition().y, rObstacle.getDimensions().x,
-						rObstacle.getDimensions().y);
+				p.rect(rObstacle.getPosition().x, rObstacle.getPosition().y, rObstacle.getDimensions().x, rObstacle.getDimensions().y);
 			}
 
 		}
