@@ -3,9 +3,13 @@ package visuals;
 import actor.GameActor;
 import data.GameData;
 import data.SlingShotData;
+import map.GameMap;
+import map.GameObstacle;
+import map.RectangularObstacle;
 import math.Vector2f;
 import processing.core.PApplet;
 import processing.core.PImage;
+import state.GameState;
 
 public class SlingShotVisuals extends GameVisuals {
 
@@ -24,11 +28,21 @@ public class SlingShotVisuals extends GameVisuals {
 
 	@Override
 	public void display(PApplet p) {
-//		p.image(loadingScreenImage, 0, 0, p.width, p.height);
+		GameState state = slingShotData.getCurrentState();
 		p.background(255);
 		for (GameActor player : slingShotData.getCurrentState().getIdToActors().values()) {
 			Vector2f pos = player.getPosition();
 			p.ellipse(pos.x, pos.y, 40, 40);
+		}
+
+		GameMap map = state.getMap();
+		for (GameObstacle obstacle : map.getObstacles()) {
+			if (obstacle instanceof RectangularObstacle) {
+				RectangularObstacle rObstacle = (RectangularObstacle) obstacle;
+				p.rect(rObstacle.getPosition().x, rObstacle.getPosition().y, rObstacle.getDimensions().x,
+						rObstacle.getDimensions().y);
+			}
+
 		}
 	}
 
