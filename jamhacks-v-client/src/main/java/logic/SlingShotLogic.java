@@ -11,6 +11,7 @@ import event.clienttoserver.InputFrameEvent;
 import event.input.AbstractGameInputEvent;
 import event.input.GameInputFrame;
 import event.input.KeyPressedGameInputEvent;
+import event.input.KeyReleasedGameInputEvent;
 import event.input.MouseDraggedGameInputEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
@@ -34,7 +35,8 @@ public class SlingShotLogic extends GameLogic {
 
 	private StateReconciliator stateReconciliator;
 
-	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
+			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.data = (SlingShotData) data;
 		if (this.data.getCurrentInputFrame() == null) {
@@ -109,7 +111,8 @@ public class SlingShotLogic extends GameLogic {
 		if (450 > mousePressedEvent.GetMousePos().x && mousePressedEvent.GetMousePos().x < 480) {
 			if (330 > mousePressedEvent.GetMousePos().y && mousePressedEvent.GetMousePos().y < 390) {
 				data.setAimingShot(true);
-				data.setMousePosOnClick(new Vector2f(mousePressedEvent.GetMousePos().x, mousePressedEvent.GetMousePos().y));
+				data.setMousePosOnClick(
+						new Vector2f(mousePressedEvent.GetMousePos().x, mousePressedEvent.GetMousePos().y));
 				return new AimEvent(data.getMousePosOnClick()); // TODO, not supposed to be mousePosOnClick
 			}
 		}
@@ -155,9 +158,9 @@ public class SlingShotLogic extends GameLogic {
 		SophisticatedInputEvent result;
 		VelocityChangeEvent velocityChangeEvent = null;
 
-		KeyPressedGameInputEvent keyPressedEvent = (KeyPressedGameInputEvent) inputEvent;
+		KeyReleasedGameInputEvent keyReleasedEvent = (KeyReleasedGameInputEvent) inputEvent;
 
-		switch (keyPressedEvent.getKeyCode()) {
+		switch (keyReleasedEvent.getKeyCode()) {
 		case KeyEvent.VK_W:
 			velocityChangeEvent = new VelocityChangeEvent(0f, 5f);
 			break;
