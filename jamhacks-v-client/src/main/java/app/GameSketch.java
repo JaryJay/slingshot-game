@@ -48,7 +48,7 @@ public class GameSketch extends PApplet {
 		mainScreenImage = loadImage("src/main/resources/SlingshotMainScreen.jpg");
 		loadingScreenImage = loadImage("src/main/resources/loadingplaceholder.jpg");
 		unsernameIndent = 200;
-		f = createFont("Acme", 40);
+		f = createFont("Arial", 40);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class GameSketch extends PApplet {
 		if (data.getCurrentScreen() == 1) {
 			disiplayMainMenu();
 		} else if (data.getCurrentScreen() == 2) {
-
+			displayLoadingScreen();
 		}
 	}
 
@@ -89,6 +89,7 @@ public class GameSketch extends PApplet {
 		{
 			textInput = textInput + key;
 		}
+
 		if (keyCode == KeyEvent.VK_W) {
 			if (this.wPressed)
 				return;
