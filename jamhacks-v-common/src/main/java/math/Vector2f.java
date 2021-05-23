@@ -1,9 +1,14 @@
 package math;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Vector2f {
+public class Vector2f implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6296785327270628381L;
 	public float x;
 	public float y;
 
