@@ -16,12 +16,12 @@ import visuals.SlingShotVisuals;
 
 public class LoadingScreenLogic extends GameLogic {
 
-	private LoadingScreenData mainScreenData;
+	private LoadingScreenData loadingScreenData;
 
 	public LoadingScreenLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
 			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
-		this.mainScreenData = (LoadingScreenData) data;
+		this.loadingScreenData = (LoadingScreenData) data;
 	}
 
 	@Override
