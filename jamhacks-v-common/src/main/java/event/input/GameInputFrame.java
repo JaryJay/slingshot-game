@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import event.clienttoserver.ClientToServerGameEvent;
+
 /**
  * A frame's worth of {@link AbstractGameInputEvent}s.
  * 
@@ -16,7 +18,7 @@ public class GameInputFrame implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 6949799180917615452L;
-	private List<AbstractGameInputEvent> events;
+	private List<ClientToServerGameEvent> events;
 
 	/**
 	 * Constructor that initialized the events list.
@@ -30,7 +32,7 @@ public class GameInputFrame implements Serializable {
 	 * 
 	 * @return the events that occured in this frame
 	 */
-	public List<AbstractGameInputEvent> getEvents() {
+	public List<ClientToServerGameEvent> getEvents() {
 		return events;
 	}
 
