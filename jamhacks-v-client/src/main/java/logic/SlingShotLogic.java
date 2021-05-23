@@ -19,15 +19,20 @@ import event.inputfactory.ShootEvent;
 import event.inputfactory.SophisticatedInputEvent;
 import event.inputfactory.SpawnRequestEvent;
 import event.inputfactory.VelocityChangeEvent;
+import event.servertoclient.STCInputFrameEvent;
 import event.servertoclient.ServerToClientGameEvent;
 import math.Vector2f;
 import state.GameState;
 import state.GameStateExtrapolator;
+import state.StateReconciliator;
+import util.LimitedQueue;
 import util.id.IdGenerator;
 
 public class SlingShotLogic extends GameLogic {
 
 	private SlingShotData data;
+
+	private StateReconciliator stateReconciliator;
 
 	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
@@ -41,6 +46,7 @@ public class SlingShotLogic extends GameLogic {
 		newPlayer.setColour(189, 9, 144);
 		spawnRequest.setNewPlayer(newPlayer);
 		this.data.getCurrentInputFrame().getEvents().add(spawnRequest);
+		stateReconciliator = new StateReconciliator(this.data.getPastStates(), new LimitedQueue<>(50));
 	}
 
 	@Override
@@ -55,6 +61,8 @@ public class SlingShotLogic extends GameLogic {
 			ctsEventBuffer.add(inputFrameEvent);
 		}
 		data.setCurrentInputFrame(new GameInputFrame(this.data.getCurrentState().getId()));
+		stateReconciliator.reconcile();
+		stateReconciliator.simulateNextState();
 	}
 
 	@Override
@@ -174,6 +182,8 @@ public class SlingShotLogic extends GameLogic {
 
 	@Override
 	protected void handleSTCGameEvent(ServerToClientGameEvent poll) {
-
+		if (poll instanceof STCInputFrameEvent) {
+			stateReconciliator.reloadInputFrame(((STCInputFrameEvent) poll).getInputFrame());
+		}
 	}
 }
