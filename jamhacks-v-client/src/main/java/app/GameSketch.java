@@ -6,6 +6,7 @@ import context.GameContextWrapper;
 import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedGameInputEvent;
 import event.input.KeyRepeatedGameInputEvent;
+import event.input.MouseDraggedGameInputEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
 import processing.core.PApplet;
@@ -96,7 +97,8 @@ public class GameSketch extends PApplet {
 
 	@Override
 	public void mouseDragged() {
-
+		MouseDraggedGameInputEvent mouseDraggedEvent = new MouseDraggedGameInputEvent(mouseX, mouseY);
+		inputBuffer.add(mouseDraggedEvent);
 	}
 
 }
