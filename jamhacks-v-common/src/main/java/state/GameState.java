@@ -22,6 +22,7 @@ public class GameState implements HasId, Serializable {
 	public GameState(long frameNumber, GameMap map, Map<Long, GameActor> idToActors) {
 		this.frameNumber = frameNumber;
 		this.actorIdToActors = idToActors;
+		this.map = map;
 
 	}
 
