@@ -1,11 +1,11 @@
 package app;
 
-import java.awt.event.KeyEvent;
 import java.util.Queue;
 
 import context.GameContextWrapper;
 import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedEvent;
+import event.input.KeyRepeatedGameInputEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
 import processing.core.PApplet;
@@ -20,11 +20,14 @@ public class GameSketch extends PApplet {
 	private boolean sPressed;
 	private boolean dPressed;
 
+	private boolean[] pressedKeys = new boolean[127];
+
 	private GameContextWrapper wrapper;
 
 	private Queue<AbstractGameInputEvent> inputBuffer;
 
-	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer, GameContextWrapper wrapper) {
+	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer,
+			GameContextWrapper wrapper) {
 		this.windowLength = windowLength;
 		this.windowHeight = windowHeight;
 		this.wrapper = wrapper;
@@ -54,24 +57,13 @@ public class GameSketch extends PApplet {
 
 	@Override
 	public void keyPressed() {
-		if (keyCode == KeyEvent.VK_W) {
-			if (this.wPressed)
+		if (keyCode >= 32 && keyCode <= 126 || keyCode == 10 || keyCode == 8) {
+			if (pressedKeys[keyCode] == true) {
+				KeyRepeatedGameInputEvent keyRepeatedEvent = new KeyRepeatedGameInputEvent(keyCode);
+				inputBuffer.add(keyRepeatedEvent);
 				return;
-			this.wPressed = true;
-		} else if (keyCode == KeyEvent.VK_A) {
-			if (this.aPressed)
-				return;
-			this.aPressed = true;
-		} else if (keyCode == KeyEvent.VK_S) {
-			if (this.sPressed)
-				return;
-			this.sPressed = true;
-		} else if (keyCode == KeyEvent.VK_D) {
-			if (this.dPressed)
-				return;
-			this.dPressed = true;
-		} else {
-			return;
+			}
+			pressedKeys[keyCode] = true;
 		}
 		KeyPressedEvent keyPressedEvent = new KeyPressedEvent(keyCode);
 		inputBuffer.add(keyPressedEvent);
@@ -79,14 +71,8 @@ public class GameSketch extends PApplet {
 
 	@Override
 	public void keyReleased() {
-		if (keyCode == KeyEvent.VK_W) {
-			this.wPressed = false;
-		} else if (keyCode == KeyEvent.VK_A) {
-			this.aPressed = false;
-		} else if (keyCode == KeyEvent.VK_S) {
-			this.sPressed = false;
-		} else if (keyCode == KeyEvent.VK_D) {
-			this.dPressed = false;
+		if (keyCode >= 32 && keyCode <= 126 || keyCode == 10 || keyCode == 8) {
+			pressedKeys[keyCode] = false;
 		}
 	}
 
