@@ -26,7 +26,8 @@ public class GameSketch extends PApplet {
 
 	private Queue<AbstractGameInputEvent> inputBuffer;
 
-	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer, GameContextWrapper wrapper) {
+	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer,
+			GameContextWrapper wrapper) {
 		this.windowLength = windowLength;
 		this.windowHeight = windowHeight;
 		this.wrapper = wrapper;
@@ -90,9 +91,6 @@ public class GameSketch extends PApplet {
 	@Override
 	public void mouseReleased() {
 		this.mouseHeld = false;
-		if (System.currentTimeMillis() - this.lastShot < 1000)
-			return;
-		this.lastShot = System.currentTimeMillis();
 		MouseReleasedGameInputEvent mouseReleasedEvent = new MouseReleasedGameInputEvent(mouseX, mouseY);
 		inputBuffer.add(mouseReleasedEvent);
 	}

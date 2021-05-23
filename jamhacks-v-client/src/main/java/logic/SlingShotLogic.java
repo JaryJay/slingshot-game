@@ -44,6 +44,7 @@ public class SlingShotLogic extends GameLogic {
 
 	private boolean aimingShot;
 	private Vector2f mousePosOnClick;
+	private long lastShot = 0;
 
 	@Override
 	protected ClientToServerGameEvent handleInputEvent(AbstractGameInputEvent inputEvent) {
@@ -77,11 +78,17 @@ public class SlingShotLogic extends GameLogic {
 				}
 			}
 		} else if (inputEvent instanceof MouseReleasedGameInputEvent) {
+			if (System.currentTimeMillis() - this.lastShot < 1000)
+				return null;
+			this.lastShot = System.currentTimeMillis();
+
 			MouseReleasedGameInputEvent mouseReleasedEvent = (MouseReleasedGameInputEvent) inputEvent;
 
 			if (this.aimingShot) {
 				Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x,
 						mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
+				float distance = (float) Math.sqrt((aimVector.x * aimVector.x) + (aimVector.y * aimVector.y));
+				float strength = distance / 20;
 			}
 		}
 
