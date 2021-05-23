@@ -14,14 +14,15 @@ public class LoadingScreenVisuals extends GameVisuals {
 
 	@Override
 	public void init(PApplet p) {
-		loadingScreenImage = p.loadImage("src/main/resources/loadingplaceholder.jpg");
+		loadingScreenImage = p.loadImage("src/main/resources/loading.jpg");
 	}
 
 	@Override
 	public void display(PApplet p) {
 		p.background(50);
 		p.fill(0);
-		p.text("LoAdInG", 400, 200);
+		p.tint(255, 255);
+		p.image(loadingScreenImage, 0, 0);
 	}
 
 }
