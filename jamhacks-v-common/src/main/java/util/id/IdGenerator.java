@@ -30,6 +30,15 @@ public final class IdGenerator {
 	/**
 	 * Private constructor to prevent programmers from instantiating an IdGenerator.
 	 */
+
+	public static void setNextActorId(long id) {
+		nextActorId = id;
+	}
+
+	public static void setNextEventId(long id) {
+		nextEventId = id;
+	}
+
 	private IdGenerator() {
 	}
 

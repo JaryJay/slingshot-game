@@ -85,6 +85,8 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			response.setState(state);
 			response.setUserId(id);
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
+			response.setNextActorId(IdGenerator.generateActorId());
+			response.setNextEventId(IdGenerator.generateEventId());
 			PlayerJoinedEvent notifier = new PlayerJoinedEvent(player);
 			for (ClientDetails details : clientDetails) {
 				responses.add(new ServerToClientResponse(details, notifier));

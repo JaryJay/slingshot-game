@@ -12,6 +12,7 @@ import event.servertoclient.ConnectionAcceptanceEvent;
 import event.servertoclient.ServerToClientGameEvent;
 import network.ClientNetworking;
 import processing.core.PApplet;
+import util.id.IdGenerator;
 import visuals.SlingShotVisuals;
 
 public class LoadingScreenLogic extends GameLogic {
@@ -38,6 +39,8 @@ public class LoadingScreenLogic extends GameLogic {
 			slingShotData.getPastStates().add(event.getState());
 			slingShotData.setCurrentState(event.getState());
 			slingShotData.setUsername(loadingScreenData.getUsername());
+			IdGenerator.setNextEventId(event.getNextEventId());
+			IdGenerator.setNextActorId(event.getNextActorId());
 			System.out.println(inputBuffer);
 			SlingShotLogic slingShotLogic = new SlingShotLogic(slingShotData, inputBuffer, ctsEventBuffer, stcEventBuffer);
 			SlingShotVisuals slingShotVisuals = new SlingShotVisuals(slingShotData);
