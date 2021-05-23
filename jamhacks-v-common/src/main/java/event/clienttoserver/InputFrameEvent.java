@@ -36,7 +36,11 @@ public class InputFrameEvent extends ClientToServerGameEvent {
 
 	@Override
 	public String getDescription() {
-		return "Input frame";
+		String desc = "Input frame:\n";
+		for (ClientToServerGameEvent event : inputFrame.getEvents()) {
+			desc = desc + event.getDescription() + '\n';
+		}
+		return desc;
 	}
 
 }
