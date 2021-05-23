@@ -50,6 +50,6 @@ public class GameLogic extends ContextPart {
 		}
 	}
 
-	protected void handleSTCGameEvent(ServerToClientGameEvent poll) {
+	protected void handleSTCGameEvent(ServerToClientGameEvent event) {
 	}
 }

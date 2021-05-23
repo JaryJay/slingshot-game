@@ -14,7 +14,6 @@ import event.clienttoserver.RegisterObserverEvent;
 import event.input.GameInputFrame;
 import event.servertoclient.ConnectionAcceptanceEvent;
 import event.servertoclient.PlayerJoinedEvent;
-import event.servertoclient.STCInputForwardEvent;
 import event.servertoclient.STCTestGameEvent;
 import map.GameMap;
 import map.RectangularObstacle;
@@ -23,7 +22,7 @@ import network.ClientDetails;
 import network.ClientToServerRequest;
 import network.ServerToClientResponse;
 import state.GameState;
-import state.GameStateExtrapolator;
+import state.StateReconciliator;
 import timer.TimeAccumulator;
 import timer.TimestepTimer;
 import util.LimitedQueue;
@@ -38,13 +37,14 @@ import util.id.IdGenerator;
  */
 public class ServerSideGameLogicTimer extends TimestepTimer {
 
-	private volatile LimitedQueue<GameState> states = null;
+	private volatile LimitedQueue<GameState> states;
 	private LimitedQueue<GameInputFrame> inputFrames;
 	private List<ClientDetails> clientDetails;
 	private Queue<ClientToServerRequest> requests;
 	private Queue<ServerToClientResponse> responses;
-	private int earliestDirtyFrame = 0;
 	private boolean isDone;
+
+	private StateReconciliator stateReconciliator;
 
 	public ServerSideGameLogicTimer(Queue<ClientToServerRequest> requests, Queue<ServerToClientResponse> responses) {
 		super(10, new TimeAccumulator());
@@ -52,16 +52,8 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 		this.responses = responses;
 		clientDetails = new ArrayList<>();
 		states = new LimitedQueue<>(50);
-		// Creates a limited hash map
-//		frameNumberToInputFrames = new LinkedHashMap<>(50, 1.0f, true) {
-//			private static final long serialVersionUID = -7875222597159324185L;
-//
-//			@Override
-//			protected boolean removeEldestEntry(Map.Entry<Long, GameInputFrame> eldest) {
-//				return size() > 50;
-//			}
-//		};
 		inputFrames = new LimitedQueue<>(50);
+		stateReconciliator = new StateReconciliator(states, inputFrames);
 	}
 
 	@Override
@@ -78,14 +70,8 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			ClientToServerRequest request = requests.poll();
 			handle(request);
 		}
-		for (int i = earliestDirtyFrame; i < states.size() - 1; i++) {
-			GameState state = states.get(i);
-			System.out.println("Resimulating state " + state.getId() + "");
-			states.set(i + 1, GameStateExtrapolator.getNextState(state, inputFrames.get(i)));
-		}
-		states.add(GameStateExtrapolator.getNextState(states.getLast(), inputFrames.getLast()));
-		inputFrames.add(new GameInputFrame(inputFrames.getLast().getFrame() + 1));
-		earliestDirtyFrame = states.size() - 1;
+		stateReconciliator.reconcile();
+		stateReconciliator.simulateNextState();
 	}
 
 	private void handle(ClientToServerRequest request) {
@@ -111,24 +97,8 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			response.setUserId(IdGenerator.generateUserId());
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
 		} else if (event instanceof InputFrameEvent) {
-			reconcileInputFrame((InputFrameEvent) event);
-		}
-	}
-
-	private void reconcileInputFrame(InputFrameEvent event) {
-		GameInputFrame inputFrame = event.getInputFrame();
-		long eventFrameNumber = inputFrame.getFrame();
-
-		long earliestRememberedFrame = inputFrames.getFirst().getFrame();
-		if (eventFrameNumber >= earliestRememberedFrame) {
-			int index = (int) (eventFrameNumber - earliestRememberedFrame);
-			inputFrames.get(index).getEvents().addAll(inputFrame.getEvents());
-			earliestRememberedFrame = Math.min(index, earliestRememberedFrame);
-		}
-		ArrayList<GameInputFrame> list = new ArrayList<>();
-		list.addAll(inputFrames);
-		for (ClientDetails details : clientDetails) {
-			responses.add(new ServerToClientResponse(details, new STCInputForwardEvent(list)));
+			InputFrameEvent inputFrameEvent = (InputFrameEvent) event;
+			stateReconciliator.reloadInputFrame(inputFrameEvent.getInputFrame());
 		}
 	}
 
