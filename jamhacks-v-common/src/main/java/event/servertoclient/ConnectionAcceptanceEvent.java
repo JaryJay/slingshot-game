@@ -12,6 +12,7 @@ public class ConnectionAcceptanceEvent extends ServerToClientGameEvent {
 	private GameState state;
 	private long nextEventId;
 	private long nextActorId;
+	private long id;
 
 	public long getUserId() {
 		return userId;
@@ -48,6 +49,14 @@ public class ConnectionAcceptanceEvent extends ServerToClientGameEvent {
 
 	public void setNextActorId(long nextActorId) {
 		this.nextActorId = nextActorId;
+	}
+
+	public void setFrameNumber(long id) {
+		this.id = id;
+	}
+	
+	public long getFrameNumber() {
+		return id;
 	}
 
 }
