@@ -7,7 +7,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Queue;
 
-import event.GameEventSerializer;
+import event.GameEventDeserializer;
 import event.servertoclient.ServerToClientGameEvent;
 
 public class ClientEventReceiver implements Runnable {
@@ -39,7 +39,7 @@ public class ClientEventReceiver implements Runnable {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			ServerToClientGameEvent event = (ServerToClientGameEvent) GameEventSerializer.deserialize(packet.getData());
+			ServerToClientGameEvent event = (ServerToClientGameEvent) GameEventDeserializer.deserialize(packet.getData());
 			System.out.println("[Message received]: " + event.getDescription() + " ID: " + event.getId());
 //			ClientToServerGameEvent response = eventHandler.handle(event);
 //			if (response != null) {
