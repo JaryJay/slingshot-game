@@ -1,4 +1,4 @@
-package display;
+package visuals;
 
 public class button {
 

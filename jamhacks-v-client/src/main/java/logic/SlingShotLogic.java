@@ -3,7 +3,6 @@ package logic;
 import java.awt.event.KeyEvent;
 import java.util.Queue;
 
-import context.ContextPart;
 import data.GameData;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.input.AbstractGameInputEvent;
@@ -14,19 +13,22 @@ import event.inputfactory.VelocityChangeEvent;
 import event.servertoclient.ServerToClientGameEvent;
 import state.MutableGameState;
 
-public class GameLogic extends ContextPart {
+public class SlingShotLogic extends GameLogic {
+
 	private GameData data;
 	private Queue<AbstractGameInputEvent> inputBuffer;
 	private Queue<ClientToServerGameEvent> ctsEventBuffer;
 	private Queue<ServerToClientGameEvent> stcEventBuffer;
 
-	public GameLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.data = data;
 		this.inputBuffer = inputBuffer;
 		this.ctsEventBuffer = ctsEventBuffer;
 		this.stcEventBuffer = stcEventBuffer;
 	}
 
+	@Override
 	public void update() {
 		handleAllInputEvents();
 		MutableGameState currentState = data.getCurrentState();
@@ -34,6 +36,7 @@ public class GameLogic extends ContextPart {
 		data.setCurrentState(currentState.getNextState());
 	}
 
+	@Override
 	protected ClientToServerGameEvent handleInputEvent(AbstractGameInputEvent inputEvent) {
 		if (inputEvent instanceof KeyPressedEvent) {
 			VelocityChangeEvent velocityChangeEvent = null;
@@ -62,6 +65,7 @@ public class GameLogic extends ContextPart {
 		return null;
 	}
 
+	@Override
 	protected void handleAllInputEvents() {
 		while (!inputBuffer.isEmpty()) {
 			AbstractGameInputEvent poll = inputBuffer.poll();
@@ -72,6 +76,7 @@ public class GameLogic extends ContextPart {
 		}
 	}
 
+	@Override
 	protected void handleAllSTCEvents() {
 		while (!stcEventBuffer.isEmpty()) {
 			ServerToClientGameEvent poll = stcEventBuffer.poll();
@@ -79,6 +84,7 @@ public class GameLogic extends ContextPart {
 		}
 	}
 
+	@Override
 	protected void handleSTCEvent(ServerToClientGameEvent poll) {
 
 	}

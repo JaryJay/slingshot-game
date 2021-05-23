@@ -5,24 +5,20 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.Queue;
 
 import event.GameEventSerializer;
-import event.clienttoserver.ClientToServerGameEvent;
 import event.servertoclient.ServerToClientGameEvent;
-import util.LimitedQueue;
 
 public class ClientEventReceiver implements Runnable {
 
 	private DatagramSocket socket;
-	private ClientSideEventHandler eventHandler;
 	private boolean ended;
-	private LimitedQueue<ClientToServerGameEvent> ctsEventBuffer;
+	private Queue<ServerToClientGameEvent> stcEventBuffer;
 
-	public ClientEventReceiver(DatagramSocket socket, ClientSideEventHandler eventHandler,
-			LimitedQueue<ClientToServerGameEvent> ctsEventBuffer) {
+	public ClientEventReceiver(DatagramSocket socket, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		this.socket = socket;
-		this.eventHandler = eventHandler;
-		this.ctsEventBuffer = ctsEventBuffer;
+		this.stcEventBuffer = stcEventBuffer;
 	}
 
 	@Override
@@ -44,11 +40,12 @@ public class ClientEventReceiver implements Runnable {
 				e.printStackTrace();
 			}
 			ServerToClientGameEvent event = (ServerToClientGameEvent) GameEventSerializer.deserialize(packet.getData());
-			System.out.println("[Message received]: " + event.getDescription() + " ID: " + event.getId());
-			ClientToServerGameEvent response = eventHandler.handle(event);
-			if (response != null) {
-				ctsEventBuffer.add(response);
-			}
+//			System.out.println("[Message received]: " + event.getDescription() + " ID: " + event.getId());
+//			ClientToServerGameEvent response = eventHandler.handle(event);
+//			if (response != null) {
+//				ctsEventBuffer.add(response);
+//			}
+			stcEventBuffer.add(event);
 		}
 	}
 

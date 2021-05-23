@@ -3,45 +3,42 @@ package app;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import context.GameContext;
+import context.GameContextWrapper;
+import data.GameData;
+import data.MainScreenData;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.input.AbstractGameInputEvent;
+import event.servertoclient.ServerToClientGameEvent;
+import logic.GameLogic;
+import logic.GameLogicTimer;
+import logic.MainScreenLogic;
+import logic.TimeAccumulator;
 import util.LimitedQueue;
+import visuals.GameVisuals;
+import visuals.MainScreenVisuals;
 
 public class GameApp {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		Queue<AbstractGameInputEvent> inputBuffer = new LinkedList<>();
-//		DatagramSocket socket = null;
-//		InetAddress destinationAddress = null;
-//		ClientEventSender sender = null;
-//		ClientEventReceiver receiver = null;
-//
-//		try {
-//			socket = new DatagramSocket(8080, InetAddress.getLocalHost());
-//			System.out.println("Starting client at " + socket.getLocalAddress() + ", port = " + socket.getLocalPort());
-//			destinationAddress = InetAddress.getByName("72.140.156.47");
-//			sender = new ClientEventSender(socket, destinationAddress);
-//			receiver = new ClientEventReceiver(socket, new ClientSideEventHandler());
-//			new Thread(sender).start();
-//			new Thread(receiver).start();
-//			ClientToServerGameEvent event = new ConnectionRequestEvent(234, 123);
-//			sender.getCtsEventBuffer().add(event);
-//			Thread.sleep(10000);
-//			sender.close();
-//			receiver.close();
-//		} catch (SocketException e) {
-//			e.printStackTrace();
-//		} catch (UnknownHostException e) {
-//			e.printStackTrace();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		Queue<ClientToServerGameEvent> ctsEventBuffer = new LimitedQueue<>(50);
+		Queue<ServerToClientGameEvent> stcEventBuffer = new LimitedQueue<>(50);
 
-		LimitedQueue<ClientToServerGameEvent> ctsEventBuffer = new LimitedQueue<>(50);
-//		ClientEventSender clientEventSender = new ClientEventSender(null, null, ctsEventBuffer)
+		GameData data = new MainScreenData();
+		GameLogic logic = new MainScreenLogic(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
+		GameVisuals visuals = new MainScreenVisuals(data);
 
-		GameSketch sketch = new GameSketch(960, 720, inputBuffer);
+		GameContext context = new GameContext(logic, visuals, data);
+		GameContextWrapper wrapper = new GameContextWrapper(context);
+		GameSketch sketch = new GameSketch(960, 720, inputBuffer, wrapper);
+
+		GameLogicTimer timer = new GameLogicTimer(logic, new TimeAccumulator());
 		sketch.run();
+
+		new Thread(timer).start();
+//		ClientNetworking networking = new ClientNetworking(ctsEventBuffer, stcEventBuffer);
+//		networking.run();
 	}
 
 }

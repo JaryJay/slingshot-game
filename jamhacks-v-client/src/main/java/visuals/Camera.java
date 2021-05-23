@@ -1,4 +1,4 @@
-package display;
+package visuals;
 
 import actor.GameActor;
 import processing.core.PApplet;

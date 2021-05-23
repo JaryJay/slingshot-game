@@ -1,10 +1,11 @@
-package logic;
+package data;
 
+import context.ContextPart;
 import state.ImmutableGameState;
 import state.MutableGameState;
 import util.LimitedQueue;
 
-public class GameData {
+public class GameData extends ContextPart {
 
 	private LimitedQueue<ImmutableGameState> pastStates;
 	private MutableGameState currentState;

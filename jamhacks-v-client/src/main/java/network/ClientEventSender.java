@@ -16,8 +16,7 @@ public class ClientEventSender implements Runnable {
 	private DatagramSocket socket;
 	private InetAddress destinationIp;
 
-	public ClientEventSender(DatagramSocket socket, InetAddress destinationIp,
-			Queue<ClientToServerGameEvent> eventList) {
+	public ClientEventSender(DatagramSocket socket, InetAddress destinationIp, Queue<ClientToServerGameEvent> eventList) {
 		this.socket = socket;
 		this.destinationIp = destinationIp;
 		ended = false;
