@@ -46,4 +46,16 @@ public class GameState implements HasId, Serializable {
 		return map;
 	}
 
+	public void setFrameNumber(long frameNumber) {
+		this.frameNumber = frameNumber;
+	}
+
+	public void setMap(GameMap map) {
+		this.map = map;
+	}
+
+	public void setActorIdToActors(Map<Long, GameActor> actorIdToActors) {
+		this.actorIdToActors = actorIdToActors;
+	}
+
 }

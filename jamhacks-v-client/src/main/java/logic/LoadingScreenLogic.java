@@ -1,7 +1,12 @@
 package logic;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
+import actor.GameActor;
 import context.GameContext;
 import data.GameData;
 import data.LoadingScreenData;
@@ -9,9 +14,14 @@ import data.SlingShotData;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.input.AbstractGameInputEvent;
 import event.servertoclient.ConnectionAcceptanceEvent;
+import event.servertoclient.STCActorInfoEvent;
+import event.servertoclient.STCObstacleInfoEvent;
 import event.servertoclient.ServerToClientGameEvent;
+import map.GameMap;
+import map.GameObstacle;
 import network.ClientNetworking;
 import processing.core.PApplet;
+import state.GameState;
 import util.id.IdGenerator;
 import visuals.SlingShotVisuals;
 
@@ -32,20 +42,50 @@ public class LoadingScreenLogic extends GameLogic {
 	}
 
 	@Override
-	protected void handleSTCGameEvent(ServerToClientGameEvent poll) {
-		if (poll instanceof ConnectionAcceptanceEvent) {
-			ConnectionAcceptanceEvent event = (ConnectionAcceptanceEvent) poll;
-			SlingShotData slingShotData = new SlingShotData(event.getUserId());
-			slingShotData.getPastStates().add(event.getState());
-			slingShotData.setCurrentState(event.getState());
+	public void update() {
+		super.update();
+		Map<Long, GameActor> actorIdToActors = loadingScreenData.getActorIdToActors();
+		List<GameObstacle> obstacles = loadingScreenData.getObstacles();
+		long[] frameNumberUserIdActorIdEventId = loadingScreenData.getFrameNumberUserIdActorIdEventId();
+		if (actorIdToActors != null && obstacles != null && frameNumberUserIdActorIdEventId != null) {
+			SlingShotData slingShotData = new SlingShotData(frameNumberUserIdActorIdEventId[1]);
+			GameState state = new GameState(frameNumberUserIdActorIdEventId[1], new GameMap(obstacles), actorIdToActors);
+			slingShotData.getPastStates().add(state);
+			slingShotData.setCurrentState(state);
 			slingShotData.setUsername(loadingScreenData.getUsername());
-			IdGenerator.setNextEventId(event.getNextEventId());
-			IdGenerator.setNextActorId(event.getNextActorId());
-			System.out.println(inputBuffer);
+			IdGenerator.setNextActorId(frameNumberUserIdActorIdEventId[2]);
+			IdGenerator.setNextEventId(frameNumberUserIdActorIdEventId[3]);
 			SlingShotLogic slingShotLogic = new SlingShotLogic(slingShotData, inputBuffer, ctsEventBuffer, stcEventBuffer);
 			SlingShotVisuals slingShotVisuals = new SlingShotVisuals(slingShotData);
-			slingShotData.setUserId(event.getUserId());
+			slingShotData.setUserId(frameNumberUserIdActorIdEventId[1]);
 			getContext().getWrapper().transition(new GameContext(slingShotLogic, slingShotVisuals, slingShotData));
+		}
+	}
+
+	@Override
+	protected void handleSTCGameEvent(ServerToClientGameEvent poll) {
+		if (poll instanceof ConnectionAcceptanceEvent) {
+			if (loadingScreenData.getFrameNumberUserIdActorIdEventId() != null) {
+				ConnectionAcceptanceEvent connectionAcceptanceEvent = (ConnectionAcceptanceEvent) poll;
+				loadingScreenData.setFrameNumberUserIdActorIdEventId(connectionAcceptanceEvent.getFrameNumber(), connectionAcceptanceEvent.getUserId(), connectionAcceptanceEvent.getNextActorId(), connectionAcceptanceEvent.getNextEventId());
+			}
+		} else if (poll instanceof STCActorInfoEvent) {
+			if (loadingScreenData.getActorIdToActors() != null) {
+				HashMap<Long, GameActor> actorIdToActors = new HashMap<>();
+				for (GameActor actor : ((STCActorInfoEvent) poll).getActors()) {
+					actorIdToActors.put(actor.getId(), actor);
+				}
+				loadingScreenData.setActorIdToActors(actorIdToActors);
+			}
+		} else if (poll instanceof STCObstacleInfoEvent) {
+			if (loadingScreenData.getObstacles() != null) {
+				GameObstacle[] obstacles = ((STCObstacleInfoEvent) poll).getObstacles();
+				List<GameObstacle> obstacleList = new ArrayList<>();
+				for (GameObstacle o : obstacles) {
+					obstacleList.add(o);
+				}
+				loadingScreenData.setObstacles(obstacleList);
+			}
 		}
 	}
 

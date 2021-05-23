@@ -16,6 +16,10 @@ public class GameMap implements Serializable {
 		obstacles = new ArrayList<>();
 	}
 
+	public GameMap(List<GameObstacle> obstacles) {
+		this.obstacles = obstacles;
+	}
+
 	public List<GameObstacle> getObstacles() {
 		return obstacles;
 	}

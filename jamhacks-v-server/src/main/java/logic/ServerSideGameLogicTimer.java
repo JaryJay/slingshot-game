@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 
+import actor.GameActor;
 import actor.Player;
 import event.clienttoserver.CTSTestGameEvent;
 import event.clienttoserver.ClientToServerGameEvent;
@@ -14,8 +15,11 @@ import event.clienttoserver.RegisterObserverEvent;
 import event.input.GameInputFrame;
 import event.servertoclient.ConnectionAcceptanceEvent;
 import event.servertoclient.PlayerJoinedEvent;
+import event.servertoclient.STCActorInfoEvent;
+import event.servertoclient.STCObstacleInfoEvent;
 import event.servertoclient.STCTestGameEvent;
 import map.GameMap;
+import map.GameObstacle;
 import map.RectangularObstacle;
 import math.Vector2f;
 import network.ClientDetails;
@@ -81,12 +85,20 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			Player player = new Player(IdGenerator.generateActorId());
 			GameState state = states.peek();
 			state.getActorIdToActors().put(id, player);
+			
 			ConnectionAcceptanceEvent response = new ConnectionAcceptanceEvent();
-			response.setState(state);
 			response.setUserId(id);
-			responses.add(new ServerToClientResponse(request.getDetails(), response));
+			response.setFrameNumber(state.getId());
 			response.setNextActorId(IdGenerator.generateActorId());
 			response.setNextEventId(IdGenerator.generateEventId());
+			responses.add(new ServerToClientResponse(request.getDetails(), response));
+
+			STCObstacleInfoEvent obstacleInfo = new STCObstacleInfoEvent((GameObstacle[]) state.getMap().getObstacles().toArray());
+			responses.add(new ServerToClientResponse(request.getDetails(), obstacleInfo));
+			
+			STCActorInfoEvent actorInfo = new STCActorInfoEvent((GameActor[]) state.getActorIdToActors().values().toArray());
+			responses.add(new ServerToClientResponse(request.getDetails(), actorInfo));
+			
 			PlayerJoinedEvent notifier = new PlayerJoinedEvent(player);
 			for (ClientDetails details : clientDetails) {
 				responses.add(new ServerToClientResponse(details, notifier));
