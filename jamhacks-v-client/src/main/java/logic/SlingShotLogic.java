@@ -8,10 +8,11 @@ import data.SlingShotData;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedEvent;
-import event.input.MousePressedGameInputEvent;
+import event.input.MousePressedEvent;
 import event.input.MouseReleasedGameInputEvent;
 import event.inputfactory.VelocityChangeEvent;
 import event.servertoclient.ServerToClientGameEvent;
+import math.Vector2f;
 import state.MutableGameState;
 
 public class SlingShotLogic extends GameLogic {
@@ -21,7 +22,8 @@ public class SlingShotLogic extends GameLogic {
 	private Queue<ClientToServerGameEvent> ctsEventBuffer;
 	private Queue<ServerToClientGameEvent> stcEventBuffer;
 
-	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
+			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.data = (SlingShotData) data;
 	}
@@ -33,6 +35,9 @@ public class SlingShotLogic extends GameLogic {
 		data.getPastStates().add(currentState.immutable());
 		data.setCurrentState(currentState.getNextState());
 	}
+
+	private boolean aimingShot;
+	private Vector2f mousePosOnClick;
 
 	@Override
 	protected ClientToServerGameEvent handleInputEvent(AbstractGameInputEvent inputEvent) {
@@ -55,9 +60,23 @@ public class SlingShotLogic extends GameLogic {
 				break;
 			}
 			return velocityChangeEvent;
-		} else if (inputEvent instanceof MousePressedGameInputEvent) {
+		} else if (inputEvent instanceof MousePressedEvent) {
+			MousePressedEvent mousePressedEvent = (MousePressedEvent) inputEvent;
 
+			if (450 > mousePressedEvent.GetMousePos().x && mousePressedEvent.GetMousePos().x < 480) {
+				if (330 > mousePressedEvent.GetMousePos().y && mousePressedEvent.GetMousePos().y < 390) {
+					this.aimingShot = true;
+					mousePosOnClick = new Vector2f(mousePressedEvent.GetMousePos().x,
+							mousePressedEvent.GetMousePos().y);
+				}
+			}
 		} else if (inputEvent instanceof MouseReleasedGameInputEvent) {
+			MouseReleasedGameInputEvent mouseReleasedEvent = (MouseReleasedGameInputEvent) inputEvent;
+
+			if (this.aimingShot) {
+				Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x,
+						mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
+			}
 		}
 
 		return null;

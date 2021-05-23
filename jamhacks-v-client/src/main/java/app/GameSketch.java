@@ -5,8 +5,8 @@ import java.util.Queue;
 import context.GameContextWrapper;
 import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedEvent;
-import event.input.KeyRepeatedGameInputEvent;
-import event.input.MousePressedGameInputEvent;
+import event.input.KeyRepeatedEvent;
+import event.input.MousePressedEvent;
 import event.input.MouseReleasedGameInputEvent;
 import processing.core.PApplet;
 
@@ -59,7 +59,7 @@ public class GameSketch extends PApplet {
 	public void keyPressed() {
 		if (keyCode >= 32 && keyCode <= 126 || keyCode == 10 || keyCode == 8) {
 			if (pressedKeys[keyCode] == true) {
-				KeyRepeatedGameInputEvent keyRepeatedEvent = new KeyRepeatedGameInputEvent(keyCode);
+				KeyRepeatedEvent keyRepeatedEvent = new KeyRepeatedEvent(keyCode);
 				inputBuffer.add(keyRepeatedEvent);
 				return;
 			}
@@ -76,21 +76,24 @@ public class GameSketch extends PApplet {
 		}
 	}
 
+	private long lastShot = 0;
 	private boolean mouseHeld;
 
 	@Override
 	public void mousePressed() {
-		if (this.mouseHeld)
+		if (mouseHeld)
 			return;
 		this.mouseHeld = true;
-
-		MousePressedGameInputEvent mousePressedEvent = new MousePressedGameInputEvent(mouseX, mouseY);
+		MousePressedEvent mousePressedEvent = new MousePressedEvent(mouseX, mouseY);
 		inputBuffer.add(mousePressedEvent);
 	}
 
 	@Override
 	public void mouseReleased() {
 		this.mouseHeld = false;
+		if (System.currentTimeMillis() - this.lastShot < 1000)
+			return;
+		this.lastShot = System.currentTimeMillis();
 		MouseReleasedGameInputEvent mouseReleasedEvent = new MouseReleasedGameInputEvent(mouseX, mouseY);
 		inputBuffer.add(mouseReleasedEvent);
 	}
