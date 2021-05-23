@@ -4,11 +4,11 @@ import data.GameData;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class LoadingScreenVisuals extends GameVisuals {
+public class SlingShotVisuals extends GameVisuals {
 
 	private PImage loadingScreenImage;
 
-	public LoadingScreenVisuals(GameData data) {
+	public SlingShotVisuals(GameData data) {
 		super(data);
 	}
 
@@ -19,9 +19,8 @@ public class LoadingScreenVisuals extends GameVisuals {
 
 	@Override
 	public void display(PApplet p) {
-		p.background(50);
-		p.fill(0);
-		p.text("LoAdInG", 400, 200);
+//		p.image(loadingScreenImage, 0, 0, p.width, p.height);
+		p.background(255);
 	}
 
 }

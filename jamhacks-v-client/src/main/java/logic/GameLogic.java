@@ -14,8 +14,7 @@ public class GameLogic extends ContextPart {
 	protected Queue<ClientToServerGameEvent> ctsEventBuffer;
 	protected Queue<ServerToClientGameEvent> stcEventBuffer;
 
-	public GameLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
-			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public GameLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		this.data = data;
 		this.inputBuffer = inputBuffer;
 		this.ctsEventBuffer = ctsEventBuffer;
@@ -24,6 +23,7 @@ public class GameLogic extends ContextPart {
 
 	public void update() {
 		handleAllInputEvents();
+		handleAllSTCEvents();
 	}
 
 	protected ClientToServerGameEvent handleInputEvent(AbstractGameInputEvent inputEvent) {

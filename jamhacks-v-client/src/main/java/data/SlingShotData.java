@@ -8,6 +8,12 @@ public class SlingShotData extends GameData {
 
 	private LimitedQueue<ImmutableGameState> pastStates;
 	private MutableGameState currentState;
+	private long userId;
+
+	public SlingShotData(long userId) {
+		pastStates = new LimitedQueue<>(50);
+		this.userId = userId;
+	}
 
 	public LimitedQueue<ImmutableGameState> getPastStates() {
 		return pastStates;

@@ -4,9 +4,9 @@ import java.util.Queue;
 
 import context.GameContextWrapper;
 import event.input.AbstractGameInputEvent;
-import event.input.KeyPressedEvent;
-import event.input.KeyRepeatedEvent;
-import event.input.MousePressedEvent;
+import event.input.KeyPressedGameInputEvent;
+import event.input.KeyRepeatedGameInputEvent;
+import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
 import processing.core.PApplet;
 
@@ -26,8 +26,7 @@ public class GameSketch extends PApplet {
 
 	private Queue<AbstractGameInputEvent> inputBuffer;
 
-	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer,
-			GameContextWrapper wrapper) {
+	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer, GameContextWrapper wrapper) {
 		this.windowLength = windowLength;
 		this.windowHeight = windowHeight;
 		this.wrapper = wrapper;
@@ -59,13 +58,13 @@ public class GameSketch extends PApplet {
 	public void keyPressed() {
 		if (keyCode >= 32 && keyCode <= 126 || keyCode == 10 || keyCode == 8) {
 			if (pressedKeys[keyCode] == true) {
-				KeyRepeatedEvent keyRepeatedEvent = new KeyRepeatedEvent(keyCode);
+				KeyRepeatedGameInputEvent keyRepeatedEvent = new KeyRepeatedGameInputEvent(keyCode);
 				inputBuffer.add(keyRepeatedEvent);
 				return;
 			}
 			pressedKeys[keyCode] = true;
 		}
-		KeyPressedEvent keyPressedEvent = new KeyPressedEvent(keyCode);
+		KeyPressedGameInputEvent keyPressedEvent = new KeyPressedGameInputEvent(keyCode);
 		inputBuffer.add(keyPressedEvent);
 	}
 
@@ -84,7 +83,7 @@ public class GameSketch extends PApplet {
 		if (mouseHeld)
 			return;
 		this.mouseHeld = true;
-		MousePressedEvent mousePressedEvent = new MousePressedEvent(mouseX, mouseY);
+		MousePressedGameInputEvent mousePressedEvent = new MousePressedGameInputEvent(mouseX, mouseY);
 		inputBuffer.add(mousePressedEvent);
 	}
 
