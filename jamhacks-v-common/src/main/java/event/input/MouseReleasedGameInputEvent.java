@@ -15,7 +15,7 @@ public class MouseReleasedGameInputEvent extends AbstractGameInputEvent {
 		this.MousePos.y = MouseY;
 	}
 
-	public Vector2f GetMousePos() {
+	public Vector2f getMousePos() {
 		return (this.MousePos);
 	}
 

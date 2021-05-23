@@ -29,12 +29,7 @@ public class SlingShotLogic extends GameLogic {
 
 	private SlingShotData data;
 
-	private boolean aimingShot;
-	private Vector2f mousePosOnClick;
-	private long lastShot = 0;
-
-	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
-			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.data = (SlingShotData) data;
 		if (this.data.getCurrentInputFrame() == null) {
@@ -81,15 +76,16 @@ public class SlingShotLogic extends GameLogic {
 	private SophisticatedInputEvent handleMouseReleased(AbstractGameInputEvent inputEvent) {
 		ShootEvent shootEvent = null;
 
-		if (System.currentTimeMillis() - this.lastShot < 1000)
+		if (System.currentTimeMillis() - data.getLastShot() < 1000)
 			return null;
-		this.lastShot = System.currentTimeMillis();
+		data.setLastShot(System.currentTimeMillis());
 
 		MouseReleasedGameInputEvent mouseReleasedEvent = (MouseReleasedGameInputEvent) inputEvent;
 
-		if (this.aimingShot) {
-			Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x,
-					mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
+		if (data.isAimingShot()) {
+			Vector2f mousePos = mouseReleasedEvent.getMousePos();
+			Vector2f mousePosOnClick = data.getMousePosOnClick();
+			Vector2f aimVector = new Vector2f(mousePos.x - mousePosOnClick.x, mousePos.y - mousePosOnClick.y);
 			float distance = (float) Math.sqrt((aimVector.x * aimVector.x) + (aimVector.y * aimVector.y));
 			float strength = distance / 20; // TODO
 		}
@@ -101,9 +97,9 @@ public class SlingShotLogic extends GameLogic {
 
 		if (450 > mousePressedEvent.GetMousePos().x && mousePressedEvent.GetMousePos().x < 480) {
 			if (330 > mousePressedEvent.GetMousePos().y && mousePressedEvent.GetMousePos().y < 390) {
-				this.aimingShot = true;
-				mousePosOnClick = new Vector2f(mousePressedEvent.GetMousePos().x, mousePressedEvent.GetMousePos().y);
-				return new AimEvent(mousePosOnClick); // TODO, not supposed to be mousePosOnClick
+				data.setAimingShot(true);
+				data.setMousePosOnClick(new Vector2f(mousePressedEvent.GetMousePos().x, mousePressedEvent.GetMousePos().y));
+				return new AimEvent(data.getMousePosOnClick()); // TODO, not supposed to be mousePosOnClick
 			}
 		}
 		return null;
@@ -112,7 +108,7 @@ public class SlingShotLogic extends GameLogic {
 	private AimEvent handleMouseDragged(AbstractGameInputEvent inputEvent) {
 		MouseDraggedGameInputEvent mouseDraggedEvent = (MouseDraggedGameInputEvent) inputEvent;
 
-		if (this.aimingShot) {
+		if (data.isAimingShot()) {
 			AimEvent aimEvent = new AimEvent(mouseDraggedEvent.GetCurrentMousePos());
 
 			return aimEvent;
