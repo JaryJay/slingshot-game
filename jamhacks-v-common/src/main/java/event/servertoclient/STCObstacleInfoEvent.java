@@ -18,4 +18,9 @@ public class STCObstacleInfoEvent extends ServerToClientGameEvent {
 		return obstacles;
 	}
 
+	@Override
+	public String getDescription() {
+		return "Obstacle info";
+	}
+
 }

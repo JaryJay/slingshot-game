@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
@@ -93,10 +94,22 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			response.setNextEventId(IdGenerator.generateEventId());
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
 
-			STCObstacleInfoEvent obstacleInfo = new STCObstacleInfoEvent((GameObstacle[]) state.getMap().getObstacles().toArray());
+			List<GameObstacle> obstacles = state.getMap().getObstacles();
+			GameObstacle[] obstaclesArr  = new GameObstacle[obstacles.size()];
+			for (int i = 0; i < obstaclesArr.length; i++) {
+				obstaclesArr[i] = obstacles.get(i);
+			}
+			STCObstacleInfoEvent obstacleInfo = new STCObstacleInfoEvent(obstaclesArr);
 			responses.add(new ServerToClientResponse(request.getDetails(), obstacleInfo));
 			
-			STCActorInfoEvent actorInfo = new STCActorInfoEvent((GameActor[]) state.getActorIdToActors().values().toArray());
+			Collection<GameActor> actors =state.getActorIdToActors().values();
+			GameActor[] actorsArr  = new GameActor[obstacles.size()];
+			int index = 0;
+			for (GameActor actor : actors) {
+				actorsArr[index] = actor;
+				index++;
+			}
+			STCActorInfoEvent actorInfo = new STCActorInfoEvent(actorsArr);
 			responses.add(new ServerToClientResponse(request.getDetails(), actorInfo));
 			
 			PlayerJoinedEvent notifier = new PlayerJoinedEvent(player);
@@ -107,7 +120,6 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			responses.add(new ServerToClientResponse(request.getDetails(), new STCTestGameEvent()));
 		} else if (event instanceof RegisterObserverEvent) {
 			ConnectionAcceptanceEvent response = new ConnectionAcceptanceEvent();
-			response.setState(states.peek());
 			response.setUserId(IdGenerator.generateUserId());
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
 		} else if (event instanceof InputFrameEvent) {

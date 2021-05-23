@@ -41,9 +41,21 @@ public class SlingShotVisuals extends GameVisuals {
 		for (GameObstacle obstacle : map.getObstacles()) {
 			if (obstacle instanceof RectangularObstacle) {
 				RectangularObstacle rObstacle = (RectangularObstacle) obstacle;
-				p.rect(rObstacle.getPosition().x, rObstacle.getPosition().y, rObstacle.getDimensions().x, rObstacle.getDimensions().y);
+				p.rect(rObstacle.getPosition().x, rObstacle.getPosition().y, rObstacle.getDimensions().x,
+						rObstacle.getDimensions().y);
 			}
 
+		}
+
+		if (slingShotData.isAimingShot()) {
+			Vector2f aimVector = new Vector2f(480 - p.mouseX, 360 - p.mouseY);
+			float diagonal = aimVector.length();
+			int amountBalls = (int) diagonal / 30;
+
+			for (int i = 0; i < amountBalls; i++) {
+				aimVector.setLength(i * 40);
+				p.ellipse(480 + aimVector.x, 360 + aimVector.y, 20, 20);
+			}
 		}
 	}
 

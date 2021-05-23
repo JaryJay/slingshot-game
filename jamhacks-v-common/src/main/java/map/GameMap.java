@@ -20,6 +20,10 @@ public class GameMap implements Serializable {
 		generateDefaultMap();
 	}
 
+	public GameMap(List<GameObstacle> obstacles) {
+		this.obstacles = obstacles;
+	}
+
 	public List<GameObstacle> getObstacles() {
 		return obstacles;
 	}

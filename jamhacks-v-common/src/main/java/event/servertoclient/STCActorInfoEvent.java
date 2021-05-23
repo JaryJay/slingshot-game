@@ -19,4 +19,10 @@ public class STCActorInfoEvent extends ServerToClientGameEvent {
 		return actors;
 	}
 
+
+	@Override
+	public String getDescription() {
+		return "Actor info";
+	}
+
 }
