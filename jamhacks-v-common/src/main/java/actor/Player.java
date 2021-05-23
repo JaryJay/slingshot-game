@@ -9,11 +9,13 @@ public class Player extends GameActor {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7270791731913100896L;
+	private static final long serialVersionUID = 4476557853000946229L;
+	private Vector2f aimDirection;
 
 	public Player() {
 		position = new Vector2f(300, 300);
-		velocity = new Vector2f(1, 0);
+		velocity = new Vector2f(0, 0);
+		aimDirection = new Vector2f(0, 1);
 	}
 
 	public Player(long id) {
@@ -34,6 +36,14 @@ public class Player extends GameActor {
 		ccopy.setPosition(position.copy());
 		ccopy.setVelocity(velocity.copy());
 		return ccopy;
+	}
+
+	public Vector2f getAimDirection() {
+		return aimDirection;
+	}
+
+	public void setAimDirection(Vector2f aimDirection) {
+		this.aimDirection = aimDirection;
 	}
 
 }

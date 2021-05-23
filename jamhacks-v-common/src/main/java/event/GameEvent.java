@@ -1,7 +1,6 @@
 package event;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 
 import util.id.HasId;
 import util.id.IdGenerator;
@@ -18,7 +17,7 @@ public abstract class GameEvent implements HasId, Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3444985417139104855L;
+	private static final long serialVersionUID = -666319056731010216L;
 	/**
 	 * The id to be returned in getId().
 	 */
@@ -51,17 +50,6 @@ public abstract class GameEvent implements HasId, Serializable {
 	@Override
 	public long getId() {
 		return id;
-	}
-
-	public static final <T extends GameEvent> T generateEvent(Class<T> eventClass) {
-		try {
-			Constructor<T> constructor = eventClass.getDeclaredConstructor(long.class, long.class);
-			T event = constructor.newInstance(IdGenerator.generateEventId(), System.currentTimeMillis());
-			return event;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		throw new RuntimeException("Could not generate an event of type " + eventClass.getSimpleName());
 	}
 
 }

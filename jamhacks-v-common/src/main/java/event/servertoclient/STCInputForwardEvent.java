@@ -1,21 +1,23 @@
 package event.servertoclient;
 
-import event.input.AbstractGameInputEvent;
+import java.util.List;
+
+import event.input.GameInputFrame;
 
 public class STCInputForwardEvent extends STCTestGameEvent {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -522191320092073170L;
-	private AbstractGameInputEvent inputEvent;
+	private static final long serialVersionUID = -4580817513926767274L;
+	private List<GameInputFrame> inputFrames;
 
-	public STCInputForwardEvent(AbstractGameInputEvent inputEvent) {
-		this.inputEvent = inputEvent;
+	public STCInputForwardEvent(List<GameInputFrame> inputFrames) {
+		this.inputFrames = inputFrames;
 	}
 
-	public AbstractGameInputEvent getInputEvent() {
-		return inputEvent;
+	public List<GameInputFrame> getInputEvents() {
+		return inputFrames;
 	}
 
 }

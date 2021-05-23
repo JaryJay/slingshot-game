@@ -18,8 +18,7 @@ public class LoadingScreenLogic extends GameLogic {
 
 	private LoadingScreenData loadingScreenData;
 
-	public LoadingScreenLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
-			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public LoadingScreenLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.loadingScreenData = (LoadingScreenData) data;
 	}
@@ -38,10 +37,11 @@ public class LoadingScreenLogic extends GameLogic {
 			SlingShotData slingShotData = new SlingShotData(event.getId());
 			slingShotData.getPastStates().add(event.getState());
 			slingShotData.setCurrentState(event.getState());
+			slingShotData.setUsername(loadingScreenData.getUsername());
 			System.out.println(inputBuffer);
-			SlingShotLogic slingShotLogic = new SlingShotLogic(slingShotData, inputBuffer, ctsEventBuffer,
-					stcEventBuffer);
+			SlingShotLogic slingShotLogic = new SlingShotLogic(slingShotData, inputBuffer, ctsEventBuffer, stcEventBuffer);
 			SlingShotVisuals slingShotVisuals = new SlingShotVisuals(slingShotData);
+			slingShotData.setUserId(event.getUserId());
 			getContext().getWrapper().transition(new GameContext(slingShotLogic, slingShotVisuals, slingShotData));
 		}
 	}

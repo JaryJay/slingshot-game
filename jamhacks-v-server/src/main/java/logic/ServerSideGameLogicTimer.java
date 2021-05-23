@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Queue;
 
 import actor.Player;
-import event.GameEvent;
 import event.clienttoserver.CTSTestGameEvent;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.clienttoserver.ConnectionRequestEvent;
@@ -15,6 +14,7 @@ import event.clienttoserver.RegisterObserverEvent;
 import event.input.GameInputFrame;
 import event.servertoclient.ConnectionAcceptanceEvent;
 import event.servertoclient.PlayerJoinedEvent;
+import event.servertoclient.STCInputForwardEvent;
 import event.servertoclient.STCTestGameEvent;
 import map.GameMap;
 import map.RectangularObstacle;
@@ -25,6 +25,7 @@ import network.ServerToClientResponse;
 import state.GameState;
 import state.GameStateExtrapolator;
 import timer.TimeAccumulator;
+import timer.TimestepTimer;
 import util.LimitedQueue;
 import util.id.IdGenerator;
 
@@ -35,57 +36,56 @@ import util.id.IdGenerator;
  * @author Jay
  *
  */
-public class ServerSideGameLogicTimer extends LogicTimer {
+public class ServerSideGameLogicTimer extends TimestepTimer {
 
 	private volatile LimitedQueue<GameState> states = null;
 	private LimitedQueue<GameInputFrame> inputFrames;
 	private List<ClientDetails> clientDetails;
 	private Queue<ClientToServerRequest> requests;
 	private Queue<ServerToClientResponse> responses;
-
-	private boolean isDone = false;
-
-	private long framesElapsed = 1;
-	private float targetFrameRate = 10f;
-	private float targetFrameTime = 1000.0f / targetFrameRate;
-	private float accumulator = 0;
-
-	private long currentTime;
+	private int earliestDirtyFrame = 0;
+	private boolean isDone;
 
 	public ServerSideGameLogicTimer(Queue<ClientToServerRequest> requests, Queue<ServerToClientResponse> responses) {
-		super(new TimeAccumulator());
+		super(10, new TimeAccumulator());
 		this.requests = requests;
 		this.responses = responses;
 		clientDetails = new ArrayList<>();
+		states = new LimitedQueue<>(50);
+		// Creates a limited hash map
+//		frameNumberToInputFrames = new LinkedHashMap<>(50, 1.0f, true) {
+//			private static final long serialVersionUID = -7875222597159324185L;
+//
+//			@Override
+//			protected boolean removeEldestEntry(Map.Entry<Long, GameInputFrame> eldest) {
+//				return size() > 50;
+//			}
+//		};
+		inputFrames = new LimitedQueue<>(50);
+	}
+
+	@Override
+	protected void startActions() {
 		GameMap map = new GameMap();
 		map.getObstacles().add(new RectangularObstacle(new Vector2f(200, 200), new Vector2f(300, 100)));
-		states = new LimitedQueue<>(50);
-		inputFrames = new LimitedQueue<>(50);
-		states.add(new GameState(IdGenerator.generateEventId(), map, new HashMap<>()));
+		states.add(new GameState(0, map, new HashMap<>()));
+		inputFrames.add(new GameInputFrame(0));
 	}
 
 	@Override
 	protected void doUpdate() {
-		long newTime = System.currentTimeMillis();
-		long frameTime = newTime - currentTime;
-
-		// The following if check is to make sure we don't fall into the spiral of death
-		if (frameTime >= 1000) {
-			frameTime = 1000;
+		if (!requests.isEmpty()) {
+			ClientToServerRequest request = requests.poll();
+			handle(request);
 		}
-		currentTime = newTime;
-		accumulator += frameTime;
-
-		// Updating as many times as needed to make up for any lag
-		while (accumulator >= targetFrameTime) {
-			if (!requests.isEmpty()) {
-				ClientToServerRequest request = requests.poll();
-				handle(request);
-			}
-			states.add(GameStateExtrapolator.getNextState(states.peek(), inputFrames.peek()));
-			accumulator -= targetFrameTime;
-			framesElapsed++;
+		for (int i = earliestDirtyFrame; i < states.size() - 1; i++) {
+			GameState state = states.get(i);
+			System.out.println("Resimulating state " + state.getId() + "");
+			states.set(i + 1, GameStateExtrapolator.getNextState(state, inputFrames.get(i)));
 		}
+		states.add(GameStateExtrapolator.getNextState(states.getLast(), inputFrames.getLast()));
+		inputFrames.add(new GameInputFrame(inputFrames.getLast().getFrame() + 1));
+		earliestDirtyFrame = states.size() - 1;
 	}
 
 	private void handle(ClientToServerRequest request) {
@@ -94,8 +94,8 @@ public class ServerSideGameLogicTimer extends LogicTimer {
 			long id = IdGenerator.generateUserId();
 			Player player = new Player(IdGenerator.generateActorId());
 			GameState state = states.peek();
-			state.getIdToActors().put(id, player);
-			ConnectionAcceptanceEvent response = GameEvent.generateEvent(ConnectionAcceptanceEvent.class);
+			state.getActorIdToActors().put(id, player);
+			ConnectionAcceptanceEvent response = new ConnectionAcceptanceEvent();
 			response.setState(state);
 			response.setUserId(id);
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
@@ -104,9 +104,9 @@ public class ServerSideGameLogicTimer extends LogicTimer {
 				responses.add(new ServerToClientResponse(details, notifier));
 			}
 		} else if (event instanceof CTSTestGameEvent) {
-			responses.add(new ServerToClientResponse(request.getDetails(), GameEvent.generateEvent(STCTestGameEvent.class)));
+			responses.add(new ServerToClientResponse(request.getDetails(), new STCTestGameEvent()));
 		} else if (event instanceof RegisterObserverEvent) {
-			ConnectionAcceptanceEvent response = GameEvent.generateEvent(ConnectionAcceptanceEvent.class);
+			ConnectionAcceptanceEvent response = new ConnectionAcceptanceEvent();
 			response.setState(states.peek());
 			response.setUserId(IdGenerator.generateUserId());
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
@@ -116,14 +116,24 @@ public class ServerSideGameLogicTimer extends LogicTimer {
 	}
 
 	private void reconcileInputFrame(InputFrameEvent event) {
-		GameInputFrame latest = inputFrames.peek();
-		while (latest.getFrame() > event.getFrame()) {
+		GameInputFrame inputFrame = event.getInputFrame();
+		long eventFrameNumber = inputFrame.getFrame();
 
+		long earliestRememberedFrame = inputFrames.getFirst().getFrame();
+		if (eventFrameNumber >= earliestRememberedFrame) {
+			int index = (int) (eventFrameNumber - earliestRememberedFrame);
+			inputFrames.get(index).getEvents().addAll(inputFrame.getEvents());
+			earliestRememberedFrame = Math.min(index, earliestRememberedFrame);
 		}
-		inputFrames.add(event.getInputFrame());
+		ArrayList<GameInputFrame> list = new ArrayList<>();
+		list.addAll(inputFrames);
 		for (ClientDetails details : clientDetails) {
-			responses.add(new ServerToClientResponse(details, event.toSTCEvent()));
+			responses.add(new ServerToClientResponse(details, new STCInputForwardEvent(list)));
 		}
+	}
+
+	public void end() {
+		isDone = true;
 	}
 
 	public void addClientDetails(ClientDetails details) {
@@ -136,18 +146,9 @@ public class ServerSideGameLogicTimer extends LogicTimer {
 		return states;
 	}
 
-	public float getAlpha() {
-		return accumulator / targetFrameTime;
-	}
-
 	@Override
-	public void end() {
-		isDone = true;
-	}
-
-	@Override
-	public long getFramesElapsed() {
-		return framesElapsed;
+	protected boolean endCondition() {
+		return isDone;
 	}
 
 }

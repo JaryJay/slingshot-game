@@ -10,15 +10,6 @@ public class InputFrameEvent extends ClientToServerGameEvent {
 	 */
 	private static final long serialVersionUID = -8637265818621317249L;
 	private GameInputFrame inputFrame;
-	private long frame;
-
-	public long getFrame() {
-		return frame;
-	}
-
-	public void setFrame(long frame) {
-		this.frame = frame;
-	}
 
 	public GameInputFrame getInputFrame() {
 		return inputFrame;
@@ -31,7 +22,6 @@ public class InputFrameEvent extends ClientToServerGameEvent {
 	public STCInputFrameEvent toSTCEvent() {
 		STCInputFrameEvent event = new STCInputFrameEvent(getTimeSent());
 		event.setInputFrame(inputFrame);
-		event.setFrame(frame);
 		return event;
 	}
 

@@ -8,12 +8,11 @@ import map.GameObstacle;
 import map.RectangularObstacle;
 import math.Vector2f;
 import processing.core.PApplet;
-import processing.core.PImage;
 import state.GameState;
 
 public class SlingShotVisuals extends GameVisuals {
 
-	private PImage loadingScreenImage;
+//	private PImage loadingScreenImage;
 	private SlingShotData slingShotData;
 
 	public SlingShotVisuals(GameData data) {
@@ -23,14 +22,14 @@ public class SlingShotVisuals extends GameVisuals {
 
 	@Override
 	public void init(PApplet p) {
-		loadingScreenImage = p.loadImage("src/main/resources/loadingplaceholder.jpg");
+//		loadingScreenImage = p.loadImage("src/main/resources/loadingplaceholder.jpg");
 	}
 
 	@Override
 	public void display(PApplet p) {
 		GameState state = slingShotData.getCurrentState();
 		p.background(255);
-		for (GameActor player : slingShotData.getCurrentState().getIdToActors().values()) {
+		for (GameActor player : slingShotData.getCurrentState().getActorIdToActors().values()) {
 			Vector2f pos = player.getPosition();
 			p.ellipse(pos.x, pos.y, 40, 40);
 		}

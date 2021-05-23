@@ -16,19 +16,13 @@ public class GameSketch extends PApplet {
 	private int windowLength;
 	private int windowHeight;
 
-	private boolean wPressed;
-	private boolean aPressed;
-	private boolean sPressed;
-	private boolean dPressed;
-
 	private boolean[] pressedKeys = new boolean[127];
 
 	private GameContextWrapper wrapper;
 
 	private Queue<AbstractGameInputEvent> inputBuffer;
 
-	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer,
-			GameContextWrapper wrapper) {
+	public GameSketch(int windowLength, int windowHeight, Queue<AbstractGameInputEvent> inputBuffer, GameContextWrapper wrapper) {
 		this.windowLength = windowLength;
 		this.windowHeight = windowHeight;
 		this.wrapper = wrapper;

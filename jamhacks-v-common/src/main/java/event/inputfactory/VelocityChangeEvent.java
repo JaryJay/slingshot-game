@@ -14,7 +14,7 @@ public class VelocityChangeEvent extends SophisticatedInputEvent {
 		velocityVector = new Vector2f(velocityX, velocityY);
 	}
 
-	public Vector2f GetMoveVector() {
+	public Vector2f getMoveVector() {
 		return (this.velocityVector);
 	}
 

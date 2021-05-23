@@ -13,6 +13,7 @@ import event.input.GameInputFrame;
 import event.input.KeyPressedGameInputEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
+import event.inputfactory.AimEvent;
 import event.inputfactory.ShootEvent;
 import event.inputfactory.SophisticatedInputEvent;
 import event.inputfactory.SpawnRequestEvent;
@@ -20,11 +21,16 @@ import event.inputfactory.VelocityChangeEvent;
 import event.servertoclient.ServerToClientGameEvent;
 import math.Vector2f;
 import state.GameState;
+import state.GameStateExtrapolator;
 import util.id.IdGenerator;
 
 public class SlingShotLogic extends GameLogic {
 
 	private SlingShotData data;
+
+	private boolean aimingShot;
+	private Vector2f mousePosOnClick;
+	private long lastShot = 0;
 
 	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
@@ -45,7 +51,7 @@ public class SlingShotLogic extends GameLogic {
 		super.update();
 		GameState currentState = data.getCurrentState();
 		data.getPastStates().add(currentState);
-		data.setCurrentState(currentState);
+		data.setCurrentState(GameStateExtrapolator.getNextState(currentState, data.getCurrentInputFrame()));
 		if (!data.getCurrentInputFrame().getEvents().isEmpty()) {
 			InputFrameEvent inputFrameEvent = new InputFrameEvent();
 			inputFrameEvent.setInputFrame(data.getCurrentInputFrame());
@@ -54,64 +60,73 @@ public class SlingShotLogic extends GameLogic {
 		data.setCurrentInputFrame(new GameInputFrame(this.data.getCurrentState().getId()));
 	}
 
-	private boolean aimingShot;
-	private Vector2f mousePosOnClick;
-	private long lastShot = 0;
-
 	@Override
 	protected SophisticatedInputEvent handleInputEvent(AbstractGameInputEvent inputEvent) {
 		SophisticatedInputEvent result = null;
 		if (inputEvent instanceof KeyPressedGameInputEvent) {
-			VelocityChangeEvent velocityChangeEvent = null;
-			KeyPressedGameInputEvent keyPressedEvent = (KeyPressedGameInputEvent) inputEvent;
-			// TODO
-			switch (keyPressedEvent.getKeyCode()) {
-			case KeyEvent.VK_W:
-				velocityChangeEvent = new VelocityChangeEvent(0f, -5f);
-				break;
-			case KeyEvent.VK_S:
-				velocityChangeEvent = new VelocityChangeEvent(0f, 5f);
-				break;
-			case KeyEvent.VK_A:
-				velocityChangeEvent = new VelocityChangeEvent(-5f, 0f);
-				break;
-			case KeyEvent.VK_D:
-				velocityChangeEvent = new VelocityChangeEvent(5f, 0f);
-				break;
-			}
-			result = velocityChangeEvent;
+			result = handleKeyPressed(inputEvent);
 		} else if (inputEvent instanceof MousePressedGameInputEvent) {
-			MousePressedGameInputEvent mousePressedEvent = (MousePressedGameInputEvent) inputEvent;
-
-			if (450 > mousePressedEvent.GetMousePos().x && mousePressedEvent.GetMousePos().x < 480) {
-				if (330 > mousePressedEvent.GetMousePos().y && mousePressedEvent.GetMousePos().y < 390) {
-					this.aimingShot = true;
-					mousePosOnClick = new Vector2f(mousePressedEvent.GetMousePos().x, mousePressedEvent.GetMousePos().y);
-//					result = new AimEvent(mousePosOnClick, mousePosOnClick)
-				}
-			}
+			result = handleMousePressed(inputEvent);
 		} else if (inputEvent instanceof MouseReleasedGameInputEvent) {
-			ShootEvent shootEvent = null;
+			result = handleMouseReleased(inputEvent);
+		}
+		if (result != null) {
+			result.setPlayerId(data.getPlayerId());
+		}
+		return result;
+	}
 
-			if (System.currentTimeMillis() - this.lastShot < 1000)
-				return null;
-			this.lastShot = System.currentTimeMillis();
+	private SophisticatedInputEvent handleMouseReleased(AbstractGameInputEvent inputEvent) {
+		ShootEvent shootEvent = null;
 
-			MouseReleasedGameInputEvent mouseReleasedEvent = (MouseReleasedGameInputEvent) inputEvent;
+		if (System.currentTimeMillis() - this.lastShot < 1000)
+			return null;
+		this.lastShot = System.currentTimeMillis();
 
-			if (this.aimingShot) {
-				Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x, mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
-				float distance = (float) Math.sqrt((aimVector.x * aimVector.x) + (aimVector.y * aimVector.y));
-				float strength = distance / 20;
+		MouseReleasedGameInputEvent mouseReleasedEvent = (MouseReleasedGameInputEvent) inputEvent;
 
-				shootEvent.aimVector = aimVector;
-				shootEvent.strength = strength;
+		if (this.aimingShot) {
+			Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x, mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
+			float distance = (float) Math.sqrt((aimVector.x * aimVector.x) + (aimVector.y * aimVector.y));
+			float strength = distance / 20; // TODO
+		}
+		return shootEvent;
+	}
 
-				return shootEvent;
+	private AimEvent handleMousePressed(AbstractGameInputEvent inputEvent) {
+		MousePressedGameInputEvent mousePressedEvent = (MousePressedGameInputEvent) inputEvent;
+
+		if (450 > mousePressedEvent.GetMousePos().x && mousePressedEvent.GetMousePos().x < 480) {
+			if (330 > mousePressedEvent.GetMousePos().y && mousePressedEvent.GetMousePos().y < 390) {
+				this.aimingShot = true;
+				mousePosOnClick = new Vector2f(mousePressedEvent.GetMousePos().x, mousePressedEvent.GetMousePos().y);
+				return new AimEvent(mousePosOnClick); // TODO, not supposed to be mousePosOnClick
 			}
 		}
-
 		return null;
+	}
+
+	private SophisticatedInputEvent handleKeyPressed(AbstractGameInputEvent inputEvent) {
+		SophisticatedInputEvent result;
+		VelocityChangeEvent velocityChangeEvent = null;
+		KeyPressedGameInputEvent keyPressedEvent = (KeyPressedGameInputEvent) inputEvent;
+		// TODO
+		switch (keyPressedEvent.getKeyCode()) {
+		case KeyEvent.VK_W:
+			velocityChangeEvent = new VelocityChangeEvent(0f, -5f);
+			break;
+		case KeyEvent.VK_S:
+			velocityChangeEvent = new VelocityChangeEvent(0f, 5f);
+			break;
+		case KeyEvent.VK_A:
+			velocityChangeEvent = new VelocityChangeEvent(-5f, 0f);
+			break;
+		case KeyEvent.VK_D:
+			velocityChangeEvent = new VelocityChangeEvent(5f, 0f);
+			break;
+		}
+		result = velocityChangeEvent;
+		return result;
 	}
 
 	@Override

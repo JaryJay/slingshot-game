@@ -2,14 +2,14 @@ package data;
 
 public class LoadingScreenData extends GameData {
 
-	private String textInput = "";
+	private String username = "Unnamed";
 
-	public String getTextInput() {
-		return textInput;
+	public String getUsername() {
+		return username;
 	}
 
 	public void setTextInput(String textInput) {
-		this.textInput = textInput;
+		this.username = textInput;
 	}
 
 }
