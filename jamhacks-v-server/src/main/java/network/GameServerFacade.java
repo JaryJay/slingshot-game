@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import event.GameEventDeserializer;
 import event.GameEventSerializer;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.servertoclient.ServerToClientGameEvent;
@@ -96,7 +97,7 @@ public class GameServerFacade implements Runnable {
 	}
 
 	private ClientToServerGameEvent deserializePacket(DatagramPacket packet) {
-		return (ClientToServerGameEvent) GameEventSerializer.deserialize(packet.getData());
+		return (ClientToServerGameEvent) GameEventDeserializer.deserialize(packet.getData());
 	}
 
 }
