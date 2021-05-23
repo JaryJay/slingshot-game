@@ -104,6 +104,7 @@ public class SlingShotLogic extends GameLogic {
 	@Override
 	protected void handleCTSGameEvent(ClientToServerGameEvent event) {
 		if (event instanceof VelocityChangeEvent) {
+			data.getCurrentInputFrame().getEvents().add(event);
 		}
 	}
 

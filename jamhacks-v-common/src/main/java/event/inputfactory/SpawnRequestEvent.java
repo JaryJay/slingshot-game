@@ -35,4 +35,9 @@ public class SpawnRequestEvent extends ClientToServerGameEvent {
 		this.newPlayer = newPlayer;
 	}
 
+	@Override
+	public String getDescription() {
+		return "Spawn request at " + newPlayer.getPosition().toString();
+	}
+
 }
