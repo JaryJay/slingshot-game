@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 
@@ -13,6 +14,9 @@ import event.clienttoserver.RegisterObserverEvent;
 import event.servertoclient.ConnectionAcceptanceEvent;
 import event.servertoclient.PlayerJoinedEvent;
 import event.servertoclient.STCTestGameEvent;
+import map.GameMap;
+import map.RectangularObstacle;
+import math.Vector2f;
 import network.ClientDetails;
 import network.ClientToServerRequest;
 import network.ServerToClientResponse;
@@ -46,6 +50,9 @@ public class ServerSideGameLogicTimer implements Runnable {
 		this.requests = requests;
 		this.responses = responses;
 		clientDetails = new ArrayList<>();
+		GameMap map = new GameMap();
+		map.getObstacles().add(new RectangularObstacle(new Vector2f(200, 200), new Vector2f(300, 100)));
+		state = new GameState(0, map, new HashMap<>());
 	}
 
 	@Override
@@ -97,8 +104,7 @@ public class ServerSideGameLogicTimer implements Runnable {
 				responses.add(new ServerToClientResponse(details, notifier));
 			}
 		} else if (event instanceof CTSTestGameEvent) {
-			responses.add(
-					new ServerToClientResponse(request.getDetails(), GameEvent.generateEvent(STCTestGameEvent.class)));
+			responses.add(new ServerToClientResponse(request.getDetails(), GameEvent.generateEvent(STCTestGameEvent.class)));
 		} else if (event instanceof RegisterObserverEvent) {
 			ConnectionAcceptanceEvent response = GameEvent.generateEvent(ConnectionAcceptanceEvent.class);
 			response.setState(state);

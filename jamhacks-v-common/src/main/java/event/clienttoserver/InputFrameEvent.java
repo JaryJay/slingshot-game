@@ -25,4 +25,9 @@ public class InputFrameEvent extends ClientToServerGameEvent {
 		this.inputFrame = inputFrame;
 	}
 
+	@Override
+	public String getDescription() {
+		return "Input frame";
+	}
+
 }
