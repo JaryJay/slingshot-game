@@ -18,4 +18,10 @@ public class VelocityChangeEvent extends ClientToServerGameEvent {
 	public Vector2f GetMoveVector() {
 		return (this.velocityVector);
 	}
+
+	@Override
+	public String getDescription() {
+		return "A change of velocity to " + velocityVector;
+	}
+
 }

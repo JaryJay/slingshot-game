@@ -25,15 +25,13 @@ public class SlingShotLogic extends GameLogic {
 
 	private SlingShotData data;
 
-	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
-			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.data = (SlingShotData) data;
 		if (this.data.getCurrentInputFrame() == null) {
 			this.data.setCurrentInputFrame(new GameInputFrame(this.data.getCurrentState().getId()));
 		}
-		SpawnRequestEvent spawnRequest = new SpawnRequestEvent(IdGenerator.generateEventId(),
-				System.currentTimeMillis());
+		SpawnRequestEvent spawnRequest = new SpawnRequestEvent(IdGenerator.generateEventId(), System.currentTimeMillis());
 		spawnRequest.setOriginalPlayerId(this.data.getUserId());
 		Player newPlayer = new Player(IdGenerator.generateActorId());
 		newPlayer.setColour(189, 9, 144);
@@ -47,10 +45,11 @@ public class SlingShotLogic extends GameLogic {
 		GameState currentState = data.getCurrentState();
 		data.getPastStates().add(currentState);
 		data.setCurrentState(currentState);
-		InputFrameEvent inputFrameEvent = new InputFrameEvent(IdGenerator.generateEventId(),
-				System.currentTimeMillis());
-		inputFrameEvent.setInputFrame(data.getCurrentInputFrame());
-		ctsEventBuffer.add(inputFrameEvent);
+		if (!data.getCurrentInputFrame().getEvents().isEmpty()) {
+			InputFrameEvent inputFrameEvent = new InputFrameEvent(IdGenerator.generateEventId(), System.currentTimeMillis());
+			inputFrameEvent.setInputFrame(data.getCurrentInputFrame());
+			ctsEventBuffer.add(inputFrameEvent);
+		}
 		data.setCurrentInputFrame(new GameInputFrame(this.data.getCurrentState().getId()));
 	}
 
@@ -85,8 +84,7 @@ public class SlingShotLogic extends GameLogic {
 			if (450 > mousePressedEvent.GetMousePos().x && mousePressedEvent.GetMousePos().x < 480) {
 				if (330 > mousePressedEvent.GetMousePos().y && mousePressedEvent.GetMousePos().y < 390) {
 					this.aimingShot = true;
-					mousePosOnClick = new Vector2f(mousePressedEvent.GetMousePos().x,
-							mousePressedEvent.GetMousePos().y);
+					mousePosOnClick = new Vector2f(mousePressedEvent.GetMousePos().x, mousePressedEvent.GetMousePos().y);
 				}
 			}
 		} else if (inputEvent instanceof MouseReleasedGameInputEvent) {
