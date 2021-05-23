@@ -144,6 +144,31 @@ public class SlingShotLogic extends GameLogic {
 		return result;
 	}
 
+	private SophisticatedInputEvent handleKeyReleased(AbstractGameInputEvent inputEvent) {
+		SophisticatedInputEvent result;
+		VelocityChangeEvent velocityChangeEvent = null;
+
+		KeyPressedGameInputEvent keyPressedEvent = (KeyPressedGameInputEvent) inputEvent;
+
+		switch (keyPressedEvent.getKeyCode()) {
+		case KeyEvent.VK_W:
+			velocityChangeEvent = new VelocityChangeEvent(0f, 5f);
+			break;
+		case KeyEvent.VK_S:
+			velocityChangeEvent = new VelocityChangeEvent(0f, -5f);
+			break;
+		case KeyEvent.VK_A:
+			velocityChangeEvent = new VelocityChangeEvent(5f, 0f);
+			break;
+		case KeyEvent.VK_D:
+			velocityChangeEvent = new VelocityChangeEvent(-5f, 0f);
+			break;
+		}
+
+		result = velocityChangeEvent;
+		return result;
+	}
+
 	@Override
 	protected void handleSophisticatedInputEvent(SophisticatedInputEvent event) {
 		if (event instanceof VelocityChangeEvent) {
