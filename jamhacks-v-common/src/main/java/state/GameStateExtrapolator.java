@@ -41,6 +41,13 @@ public class GameStateExtrapolator {
 				}
 			} else if (actor instanceof Projectile) {
 				Projectile projectile = (Projectile) actor;
+
+				for (GameActor a : actorIdToActors.values()) {
+					if (a instanceof Player) {
+						handleProjectilePlayerCollision((Player) a, projectile);
+					}
+				}
+
 				for (GameObstacle obstacle : obstacles) {
 					if (obstacle instanceof RectangularObstacle) {
 						handleProjectileRectCollision(projectile, obstacle);
@@ -50,6 +57,14 @@ public class GameStateExtrapolator {
 
 		}
 		return next;
+	}
+
+	private static void handleProjectilePlayerCollision(Player player, Projectile projectile) {
+		Vector2f centerToCenter = player.getPosition().copy().sub(projectile.getPosition());
+		float radiuses = player.getHitboxRadius() + projectile.getHitboxRadius();
+		if (centerToCenter.lengthSqaured() < radiuses * radiuses) {
+			System.out.println("HIT");
+		}
 	}
 
 	private static void handleProjectileRectCollision(Projectile projectile, GameObstacle obstacle) {
