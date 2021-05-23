@@ -35,7 +35,7 @@ public class LoadingScreenLogic extends GameLogic {
 	protected void handleSTCGameEvent(ServerToClientGameEvent poll) {
 		if (poll instanceof ConnectionAcceptanceEvent) {
 			ConnectionAcceptanceEvent event = (ConnectionAcceptanceEvent) poll;
-			SlingShotData slingShotData = new SlingShotData(event.getId());
+			SlingShotData slingShotData = new SlingShotData(event.getUserId());
 			slingShotData.getPastStates().add(event.getState());
 			slingShotData.setCurrentState(event.getState());
 			slingShotData.setUsername(loadingScreenData.getUsername());

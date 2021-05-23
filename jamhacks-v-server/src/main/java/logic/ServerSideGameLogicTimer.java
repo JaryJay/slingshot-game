@@ -101,6 +101,9 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 		} else if (event instanceof InputFrameEvent) {
 			InputFrameEvent inputFrameEvent = (InputFrameEvent) event;
 			stateReconciliator.reloadInputFrame(inputFrameEvent.getInputFrame());
+			for (ClientDetails details : clientDetails) {
+				responses.add(new ServerToClientResponse(details, inputFrameEvent.toSTCEvent()));
+			}
 		}
 	}
 
