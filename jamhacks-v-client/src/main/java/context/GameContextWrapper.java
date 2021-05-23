@@ -8,8 +8,8 @@ public class GameContextWrapper {
 	private PApplet gameSketch;
 
 	public GameContextWrapper(GameContext gameContext) {
-		this.gameContext = gameContext;
 		gameContext.setWrapper(this);
+		this.gameContext = gameContext;
 	}
 
 	public void init(PApplet p) {
@@ -17,9 +17,9 @@ public class GameContextWrapper {
 	}
 
 	public void transition(GameContext gameContext) {
+		gameContext.setWrapper(this);
 		gameContext.init(gameSketch);
 		this.gameContext = gameContext;
-		gameContext.setWrapper(this);
 	}
 
 	public GameContext getContext() {

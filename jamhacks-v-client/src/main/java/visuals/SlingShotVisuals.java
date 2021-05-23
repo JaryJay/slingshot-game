@@ -30,6 +30,7 @@ public class SlingShotVisuals extends GameVisuals {
 	public void display(PApplet p) {
 		GameState state = slingShotData.getCurrentState();
 		p.background(255);
+		p.ellipse(slingShotData.x, slingShotData.y, 100, 100);
 		for (GameActor player : slingShotData.getCurrentState().getIdToActors().values()) {
 			Vector2f pos = player.getPosition();
 			p.ellipse(pos.x, pos.y, 40, 40);

@@ -6,6 +6,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Queue;
 
+import context.GameContextWrapper;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.clienttoserver.ConnectionRequestEvent;
 import event.servertoclient.ServerToClientGameEvent;
@@ -15,7 +16,7 @@ public class ClientNetworking implements Runnable {
 	private ClientEventSender sender = null;
 	private ClientEventReceiver receiver = null;
 
-	public ClientNetworking(Queue<ClientToServerGameEvent> eventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public ClientNetworking(Queue<ClientToServerGameEvent> eventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer, GameContextWrapper wrapper) {
 		DatagramSocket socket = null;
 		InetAddress destinationAddress = null;
 
@@ -24,7 +25,7 @@ public class ClientNetworking implements Runnable {
 			System.out.println("Starting client at " + socket.getLocalAddress() + ", port = " + socket.getLocalPort());
 			destinationAddress = InetAddress.getByName("72.140.156.47");
 			sender = new ClientEventSender(socket, destinationAddress, eventBuffer);
-			receiver = new ClientEventReceiver(socket, stcEventBuffer);
+			receiver = new ClientEventReceiver(socket, stcEventBuffer, wrapper);
 		} catch (SocketException e) {
 			e.printStackTrace();
 		} catch (UnknownHostException e) {

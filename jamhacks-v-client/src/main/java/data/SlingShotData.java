@@ -10,6 +10,8 @@ public class SlingShotData extends GameData {
 	private GameState currentState;
 	private GameInputFrame currentInputFrame;
 	private long userId;
+	public float x = 300;
+	public float y = 300;
 
 	public SlingShotData(long userId) {
 		pastStates = new LimitedQueue<>(50);

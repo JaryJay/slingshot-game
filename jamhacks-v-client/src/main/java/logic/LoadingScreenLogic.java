@@ -18,8 +18,7 @@ public class LoadingScreenLogic extends GameLogic {
 
 	private LoadingScreenData loadingScreenData;
 
-	public LoadingScreenLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
-			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public LoadingScreenLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.loadingScreenData = (LoadingScreenData) data;
 	}
@@ -27,7 +26,8 @@ public class LoadingScreenLogic extends GameLogic {
 	@Override
 	public void init(PApplet p) {
 		super.init(p);
-		ClientNetworking clientNetworking = new ClientNetworking(ctsEventBuffer, stcEventBuffer);
+		System.out.println("Wrapper" + getContext().getWrapper());
+		ClientNetworking clientNetworking = new ClientNetworking(ctsEventBuffer, stcEventBuffer, getContext().getWrapper());
 		new Thread(clientNetworking).start();
 	}
 
@@ -39,8 +39,7 @@ public class LoadingScreenLogic extends GameLogic {
 			slingShotData.getPastStates().add(event.getState());
 			slingShotData.setCurrentState(event.getState());
 			System.out.println(inputBuffer);
-			SlingShotLogic slingShotLogic = new SlingShotLogic(slingShotData, inputBuffer, ctsEventBuffer,
-					stcEventBuffer);
+			SlingShotLogic slingShotLogic = new SlingShotLogic(slingShotData, inputBuffer, ctsEventBuffer, stcEventBuffer);
 			SlingShotVisuals slingShotVisuals = new SlingShotVisuals(slingShotData);
 			getContext().getWrapper().transition(new GameContext(slingShotLogic, slingShotVisuals, slingShotData));
 		}
