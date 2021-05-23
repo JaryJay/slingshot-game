@@ -17,9 +17,9 @@ public class GameContextWrapper {
 	}
 
 	public void transition(GameContext gameContext) {
+		gameContext.init(gameSketch);
 		this.gameContext = gameContext;
 		gameContext.setWrapper(this);
-		gameContext.init(gameSketch);
 	}
 
 	public GameContext getContext() {

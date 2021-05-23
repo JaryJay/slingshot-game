@@ -9,12 +9,13 @@ import event.input.AbstractGameInputEvent;
 import event.servertoclient.ServerToClientGameEvent;
 
 public class GameLogic extends ContextPart {
-	private GameData data;
-	private Queue<AbstractGameInputEvent> inputBuffer;
-	private Queue<ClientToServerGameEvent> ctsEventBuffer;
-	private Queue<ServerToClientGameEvent> stcEventBuffer;
+	protected GameData data;
+	protected Queue<AbstractGameInputEvent> inputBuffer;
+	protected Queue<ClientToServerGameEvent> ctsEventBuffer;
+	protected Queue<ServerToClientGameEvent> stcEventBuffer;
 
-	public GameLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
+	public GameLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer,
+			Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		this.data = data;
 		this.inputBuffer = inputBuffer;
 		this.ctsEventBuffer = ctsEventBuffer;
