@@ -29,6 +29,8 @@ public class LoadingScreenLogic extends GameLogic {
 
 	private LoadingScreenData loadingScreenData;
 
+	private int numObstacles = 0;
+
 	public LoadingScreenLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.loadingScreenData = (LoadingScreenData) data;
@@ -47,8 +49,8 @@ public class LoadingScreenLogic extends GameLogic {
 		Map<Long, GameActor> actorIdToActors = loadingScreenData.getActorIdToActors();
 		List<GameObstacle> obstacles = loadingScreenData.getObstacles();
 		long[] frameNumberUserIdActorIdEventId = loadingScreenData.getFrameNumberUserIdActorIdEventId();
-		System.out.println(actorIdToActors + " " + obstacles + " " + frameNumberUserIdActorIdEventId);
-		if (actorIdToActors != null && obstacles != null && frameNumberUserIdActorIdEventId != null) {
+		System.out.println((actorIdToActors != null) + " " + (obstacles != null) + " " + (frameNumberUserIdActorIdEventId != null));
+		if (actorIdToActors != null && obstacles != null && frameNumberUserIdActorIdEventId != null && obstacles.size() == numObstacles) {
 			SlingShotData slingShotData = new SlingShotData(frameNumberUserIdActorIdEventId[1]);
 			GameState state = new GameState(frameNumberUserIdActorIdEventId[1], new GameMap(obstacles), actorIdToActors);
 			slingShotData.getPastStates().add(state);
@@ -60,6 +62,7 @@ public class LoadingScreenLogic extends GameLogic {
 			SlingShotVisuals slingShotVisuals = new SlingShotVisuals(slingShotData);
 			slingShotData.setUserId(frameNumberUserIdActorIdEventId[1]);
 			getContext().getWrapper().transition(new GameContext(slingShotLogic, slingShotVisuals, slingShotData));
+			System.out.println("Transitioning to game");
 		}
 	}
 
@@ -69,14 +72,13 @@ public class LoadingScreenLogic extends GameLogic {
 		if (event instanceof ConnectionAcceptanceEvent) {
 			ConnectionAcceptanceEvent connectionAcceptanceEvent = (ConnectionAcceptanceEvent) event;
 			loadingScreenData.setFrameNumberUserIdActorIdEventId(connectionAcceptanceEvent.getFrameNumber(), connectionAcceptanceEvent.getUserId(), connectionAcceptanceEvent.getNextActorId(), connectionAcceptanceEvent.getNextEventId());
-			System.out.println(loadingScreenData.getFrameNumberUserIdActorIdEventId());
+			numObstacles = ((ConnectionAcceptanceEvent) event).getNumObstacles();
 		} else if (event instanceof STCActorInfoEvent) {
 			HashMap<Long, GameActor> actorIdToActors = new HashMap<>();
 			for (GameActor actor : ((STCActorInfoEvent) event).getActors()) {
 				actorIdToActors.put(actor.getId(), actor);
 			}
 			loadingScreenData.setActorIdToActors(actorIdToActors);
-			System.out.println(loadingScreenData.getActorIdToActors());
 		} else if (event instanceof STCObstacleInfoEvent) {
 			GameObstacle obstacle = ((STCObstacleInfoEvent) event).getObstacle();
 			if (loadingScreenData.getObstacles() == null) {
@@ -84,7 +86,6 @@ public class LoadingScreenLogic extends GameLogic {
 				loadingScreenData.setObstacles(obstacleList);
 			}
 			loadingScreenData.getObstacles().add(obstacle);
-			System.out.println(loadingScreenData.getObstacles());
 		} else {
 			System.out.println("unhandled: " + event.getDescription());
 		}

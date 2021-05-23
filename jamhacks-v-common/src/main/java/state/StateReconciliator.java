@@ -19,15 +19,15 @@ public class StateReconciliator {
 	public void reconcile() {
 		for (int i = earliestDirtyFrame; i < states.size() - 1; i++) {
 			GameState state = states.get(i);
-			System.out.println("Resimulating state " + state.getId() + "");
+			System.out.println("Resimulating state " + state.getId() + " at index " + i);
 			states.set(i + 1, GameStateExtrapolator.getNextState(state, inputFrames.get(i)));
 		}
+		earliestDirtyFrame = states.size() - 1;
 	}
 
 	public void simulateNextState() {
 		states.add(GameStateExtrapolator.getNextState(states.getLast(), inputFrames.getLast()));
 		inputFrames.add(new GameInputFrame(inputFrames.getLast().getFrame() + 1));
-		earliestDirtyFrame = states.size() - 1;
 	}
 
 	public void reloadInputFrame(GameInputFrame inputFrame) {
