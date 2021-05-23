@@ -6,7 +6,9 @@ import java.util.Queue;
 import data.GameData;
 import data.SlingShotData;
 import event.clienttoserver.ClientToServerGameEvent;
+import event.clienttoserver.InputFrameEvent;
 import event.input.AbstractGameInputEvent;
+import event.input.GameInputFrame;
 import event.input.KeyPressedGameInputEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
@@ -14,6 +16,7 @@ import event.inputfactory.VelocityChangeEvent;
 import event.servertoclient.ServerToClientGameEvent;
 import math.Vector2f;
 import state.MutableGameState;
+import util.id.IdGenerator;
 
 public class SlingShotLogic extends GameLogic {
 
@@ -30,6 +33,11 @@ public class SlingShotLogic extends GameLogic {
 		MutableGameState currentState = data.getCurrentState();
 		data.getPastStates().add(currentState.immutable());
 		data.setCurrentState(currentState.getNextState());
+		InputFrameEvent inputFrameEvent = new InputFrameEvent(IdGenerator.generateEventId(), System.currentTimeMillis());
+		inputFrameEvent.setInputFrame(data.getCurrentInputFrame());
+		ctsEventBuffer.add(inputFrameEvent);
+		data.setCurrentInputFrame(new GameInputFrame());
+
 	}
 
 	private boolean aimingShot;
@@ -77,26 +85,13 @@ public class SlingShotLogic extends GameLogic {
 	}
 
 	@Override
-	protected void handleAllInputEvents() {
-		while (!inputBuffer.isEmpty()) {
-			AbstractGameInputEvent poll = inputBuffer.poll();
-			ClientToServerGameEvent returnEvent = handleInputEvent(poll);
-			if (returnEvent != null) {
-				ctsEventBuffer.add(returnEvent);
-			}
+	protected void handleCTSGameEvent(ClientToServerGameEvent event) {
+		if (event instanceof VelocityChangeEvent) {
 		}
 	}
 
 	@Override
-	protected void handleAllSTCEvents() {
-		while (!stcEventBuffer.isEmpty()) {
-			ServerToClientGameEvent poll = stcEventBuffer.poll();
-			handleSTCEvent(poll);
-		}
-	}
-
-	@Override
-	protected void handleSTCEvent(ServerToClientGameEvent poll) {
+	protected void handleSTCGameEvent(ServerToClientGameEvent poll) {
 
 	}
 }

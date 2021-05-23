@@ -32,7 +32,7 @@ public class LoadingScreenLogic extends GameLogic {
 	}
 
 	@Override
-	protected void handleSTCEvent(ServerToClientGameEvent poll) {
+	protected void handleSTCGameEvent(ServerToClientGameEvent poll) {
 		if (poll instanceof ConnectionAcceptanceEvent) {
 			ConnectionAcceptanceEvent event = (ConnectionAcceptanceEvent) poll;
 			SlingShotData slingShotData = new SlingShotData(event.getId());
