@@ -1,18 +1,14 @@
-package event.clienttoserver;
+package event.servertoclient;
 
+import event.clienttoserver.ClientToServerGameEvent;
 import event.input.GameInputFrame;
-import event.servertoclient.STCInputFrameEvent;
 
-public class InputFrameEvent extends ClientToServerGameEvent {
+public class STCInputFrameEvent extends ServerToClientGameEvent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7713758653827479136L;
 	private GameInputFrame inputFrame;
 	private long frame;
 
-	public InputFrameEvent() {
+	public STCInputFrameEvent() {
 	}
 
 	public long getFrame() {
@@ -23,7 +19,7 @@ public class InputFrameEvent extends ClientToServerGameEvent {
 		this.frame = frame;
 	}
 
-	public InputFrameEvent(long id, long timeSent) {
+	public STCInputFrameEvent(long id, long timeSent) {
 		super(id, timeSent);
 	}
 
@@ -33,13 +29,6 @@ public class InputFrameEvent extends ClientToServerGameEvent {
 
 	public void setInputFrame(GameInputFrame inputFrame) {
 		this.inputFrame = inputFrame;
-	}
-
-	public STCInputFrameEvent toSTCEvent() {
-		STCInputFrameEvent event = new STCInputFrameEvent(getId(), getTimeSent());
-		event.setInputFrame(inputFrame);
-		event.setFrame(frame);
-		return event;
 	}
 
 	@Override

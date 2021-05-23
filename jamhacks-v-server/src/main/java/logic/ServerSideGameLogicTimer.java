@@ -113,6 +113,9 @@ public class ServerSideGameLogicTimer extends LogicTimer {
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
 		} else if (event instanceof InputFrameEvent) {
 			inputFrames.add(((InputFrameEvent) event).getInputFrame());
+			for (ClientDetails details : clientDetails) {
+				responses.add(new ServerToClientResponse(details, ((InputFrameEvent) event).toSTCEvent()));
+			}
 		}
 	}
 
