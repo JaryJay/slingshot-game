@@ -58,6 +58,7 @@ public class GameServerFacade implements Runnable {
 					byte[] serializeResponse = serializeResponse(response.getEvent());
 					sendPacket(response.getDetails(), serializeResponse);
 					System.out.println("[Message sent to " + response.getDetails().getAddress().getHostAddress() + "]: " + response.getEvent().getDescription());
+					System.out.println("Packet Size: " + serializeResponse + " bytes");
 				}
 				Thread.yield();
 			}

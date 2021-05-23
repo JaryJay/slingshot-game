@@ -12,21 +12,15 @@ public class GameObstacle implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 4143004735978913564L;
-	protected GameObstacleHitbox hitbox;
 	protected String imageUrl;
 	protected transient PImage image;
 	protected Vector2f position;
 	protected Vector2f dimensions;
 
-	public GameObstacle(GameObstacleHitbox hitbox, String imageUrl, Vector2f position, Vector2f dimensions) {
-		this.hitbox = hitbox;
+	public GameObstacle(String imageUrl, Vector2f position, Vector2f dimensions) {
 		this.imageUrl = imageUrl;
 		this.position = position;
 		this.dimensions = dimensions;
-	}
-
-	public GameObstacleHitbox getHitbox() {
-		return hitbox;
 	}
 
 	public Vector2f getTopLeftEdge() {

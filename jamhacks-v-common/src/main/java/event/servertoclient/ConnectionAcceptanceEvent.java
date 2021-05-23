@@ -31,7 +31,7 @@ public class ConnectionAcceptanceEvent extends ServerToClientGameEvent {
 
 	@Override
 	public String getDescription() {
-		return "An acknowledgement to a StartingStateRequestEvent, and contains the starting state.";
+		return "Connection accepted";
 	}
 
 	public long getNextEventId() {
