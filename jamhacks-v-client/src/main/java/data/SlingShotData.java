@@ -1,14 +1,13 @@
 package data;
 
 import event.input.GameInputFrame;
-import state.ImmutableGameState;
-import state.MutableGameState;
+import state.GameState;
 import util.LimitedQueue;
 
 public class SlingShotData extends GameData {
 
-	private LimitedQueue<ImmutableGameState> pastStates;
-	private MutableGameState currentState;
+	private LimitedQueue<GameState> pastStates;
+	private GameState currentState;
 	private GameInputFrame currentInputFrame;
 	private long userId;
 
@@ -17,15 +16,15 @@ public class SlingShotData extends GameData {
 		this.userId = userId;
 	}
 
-	public LimitedQueue<ImmutableGameState> getPastStates() {
+	public LimitedQueue<GameState> getPastStates() {
 		return pastStates;
 	}
 
-	public MutableGameState getCurrentState() {
+	public GameState getCurrentState() {
 		return currentState;
 	}
 
-	public void setCurrentState(MutableGameState currentState) {
+	public void setCurrentState(GameState currentState) {
 		this.currentState = currentState;
 	}
 

@@ -1,6 +1,6 @@
 package event.servertoclient;
 
-import state.MutableGameState;
+import state.GameState;
 
 public class ConnectionAcceptanceEvent extends ServerToClientGameEvent {
 
@@ -9,9 +9,9 @@ public class ConnectionAcceptanceEvent extends ServerToClientGameEvent {
 	 */
 	private static final long serialVersionUID = -8108701449003594930L;
 	private long userId;
-	private MutableGameState state;
+	private GameState state;
 
-	public ConnectionAcceptanceEvent(MutableGameState state) {
+	public ConnectionAcceptanceEvent(GameState state) {
 		this.state = state;
 	}
 
@@ -27,11 +27,11 @@ public class ConnectionAcceptanceEvent extends ServerToClientGameEvent {
 		this.userId = userId;
 	}
 
-	public MutableGameState getState() {
+	public GameState getState() {
 		return state;
 	}
 
-	public void setState(MutableGameState state) {
+	public void setState(GameState state) {
 		this.state = state;
 	}
 
