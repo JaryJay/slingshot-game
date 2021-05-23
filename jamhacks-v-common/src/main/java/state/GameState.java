@@ -3,6 +3,7 @@ package state;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import actor.GameActor;
 import map.GameMap;
@@ -25,7 +26,14 @@ public class GameState implements HasId, Serializable {
 	}
 
 	public Map<Long, GameActor> getActorIdToActors() {
-		return new HashMap<>(actorIdToActors);
+		Set<Long> keySet = actorIdToActors.keySet();
+		HashMap<Long, GameActor> hashMap = new HashMap<>();
+
+		for (Long l : keySet) {
+			hashMap.put(l, actorIdToActors.get(l).copy());
+		}
+
+		return hashMap;
 	}
 
 	@Override
