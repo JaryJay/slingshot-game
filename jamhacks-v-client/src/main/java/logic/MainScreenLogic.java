@@ -20,10 +20,6 @@ public class MainScreenLogic extends GameLogic {
 	}
 
 	@Override
-	public void update() {
-	}
-
-	@Override
 	protected ClientToServerGameEvent handleInputEvent(AbstractGameInputEvent inputEvent) {
 		if (inputEvent instanceof KeyPressedEvent) {
 			KeyPressedEvent event = (KeyPressedEvent) inputEvent;

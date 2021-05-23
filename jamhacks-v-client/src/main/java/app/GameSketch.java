@@ -15,6 +15,11 @@ public class GameSketch extends PApplet {
 	private int windowLength;
 	private int windowHeight;
 
+	private boolean wPressed;
+	private boolean aPressed;
+	private boolean sPressed;
+	private boolean dPressed;
+
 	private GameContextWrapper wrapper;
 
 	private Queue<AbstractGameInputEvent> inputBuffer;
@@ -39,7 +44,6 @@ public class GameSketch extends PApplet {
 
 	@Override
 	public void draw() {
-
 		wrapper.getContext().getVisuals().display(this);
 	}
 
@@ -48,14 +52,8 @@ public class GameSketch extends PApplet {
 		runSketch(processingArgs, this);
 	}
 
-	private boolean wPressed;
-	private boolean aPressed;
-	private boolean sPressed;
-	private boolean dPressed;
-
 	@Override
 	public void keyPressed() {
-
 		if (keyCode == KeyEvent.VK_W) {
 			if (this.wPressed)
 				return;

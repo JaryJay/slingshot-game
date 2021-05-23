@@ -33,7 +33,7 @@ public class GameApp {
 		GameContextWrapper wrapper = new GameContextWrapper(context);
 		GameSketch sketch = new GameSketch(960, 720, inputBuffer, wrapper);
 
-		GameLogicTimer timer = new GameLogicTimer(logic, new TimeAccumulator());
+		GameLogicTimer timer = new GameLogicTimer(wrapper, new TimeAccumulator());
 		sketch.run();
 
 		new Thread(timer).start();

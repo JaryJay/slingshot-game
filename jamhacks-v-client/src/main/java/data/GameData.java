@@ -1,27 +1,10 @@
 package data;
 
 import context.ContextPart;
-import state.ImmutableGameState;
-import state.MutableGameState;
-import util.LimitedQueue;
 
 public class GameData extends ContextPart {
 
-	private LimitedQueue<ImmutableGameState> pastStates;
-	private MutableGameState currentState;
 	private int currentScreen = 1;
-
-	public LimitedQueue<ImmutableGameState> getPastStates() {
-		return pastStates;
-	}
-
-	public MutableGameState getCurrentState() {
-		return currentState;
-	}
-
-	public void setCurrentState(MutableGameState currentState) {
-		this.currentState = currentState;
-	}
 
 	public int getCurrentScreen() {
 		return currentScreen;

@@ -1,18 +1,20 @@
 package logic;
 
+import context.GameContextWrapper;
+
 public class GameLogicTimer extends TimestepTimer {
 
-	private GameLogic logic;
+	private GameContextWrapper wrapper;
 	private boolean isDone = false;
 
-	public GameLogicTimer(GameLogic logic, TimeAccumulator accumulator) {
+	public GameLogicTimer(GameContextWrapper wrapper, TimeAccumulator accumulator) {
 		super(10, accumulator);
-		this.logic = logic;
+		this.wrapper = wrapper;
 	}
 
 	@Override
 	protected void doUpdate() {
-		logic.update();
+		wrapper.getContext().getLogic().update();
 	}
 
 	public void end() {

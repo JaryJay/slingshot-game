@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.Queue;
 
 import data.GameData;
+import data.SlingShotData;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedEvent;
@@ -15,22 +16,19 @@ import state.MutableGameState;
 
 public class SlingShotLogic extends GameLogic {
 
-	private GameData data;
+	private SlingShotData data;
 	private Queue<AbstractGameInputEvent> inputBuffer;
 	private Queue<ClientToServerGameEvent> ctsEventBuffer;
 	private Queue<ServerToClientGameEvent> stcEventBuffer;
 
 	public SlingShotLogic(GameData data, Queue<AbstractGameInputEvent> inputBuffer, Queue<ClientToServerGameEvent> ctsEventBuffer, Queue<ServerToClientGameEvent> stcEventBuffer) {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
-		this.data = data;
-		this.inputBuffer = inputBuffer;
-		this.ctsEventBuffer = ctsEventBuffer;
-		this.stcEventBuffer = stcEventBuffer;
+		this.data = (SlingShotData) data;
 	}
 
 	@Override
 	public void update() {
-		handleAllInputEvents();
+		super.update();
 		MutableGameState currentState = data.getCurrentState();
 		data.getPastStates().add(currentState.immutable());
 		data.setCurrentState(currentState.getNextState());
