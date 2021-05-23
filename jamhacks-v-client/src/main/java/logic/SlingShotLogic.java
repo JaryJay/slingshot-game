@@ -46,7 +46,10 @@ public class SlingShotLogic extends GameLogic {
 		newPlayer.setColour(189, 9, 144);
 		spawnRequest.setNewPlayer(newPlayer);
 		this.data.getCurrentInputFrame().getEvents().add(spawnRequest);
-		stateReconciliator = new StateReconciliator(this.data.getPastStates(), new LimitedQueue<>(50));
+		LimitedQueue<GameInputFrame> inputFrames = new LimitedQueue<>(50);
+		long frame = this.data.getPastStates().getLast().getId();
+		inputFrames.add(new GameInputFrame(frame));
+		stateReconciliator = new StateReconciliator(this.data.getPastStates(), inputFrames);
 	}
 
 	@Override
