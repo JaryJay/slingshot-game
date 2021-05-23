@@ -42,6 +42,9 @@ public class StateReconciliator {
 			earliestRememberedFrame = Math.min(index, earliestRememberedFrame);
 		} else {
 			System.out.println("Input frame discarded, too old");
+			for (GameInputFrame event : inputFrames) {
+				System.out.println(event.getEvents());
+			}
 		}
 		ArrayList<GameInputFrame> list = new ArrayList<>();
 		list.addAll(inputFrames);

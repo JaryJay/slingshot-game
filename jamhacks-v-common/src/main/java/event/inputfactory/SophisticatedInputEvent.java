@@ -19,4 +19,9 @@ public class SophisticatedInputEvent extends ClientToServerGameEvent {
 		this.playerId = playerId;
 	}
 
+	@Override
+	public String getDescription() {
+		return "Sophisticated input event from playerId " + playerId;
+	}
+
 }
