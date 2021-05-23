@@ -12,10 +12,13 @@ public class Player extends GameActor {
 	private static final long serialVersionUID = 4476557853000946229L;
 	private Vector2f aimDirection;
 
+	private int health = 100;
+
 	public Player() {
 		position = new Vector2f(300, 300);
 		velocity = new Vector2f(0, 0);
 		aimDirection = new Vector2f(0, 1);
+
 	}
 
 	public Player(long id) {
@@ -44,6 +47,14 @@ public class Player extends GameActor {
 
 	public void setAimDirection(Vector2f aimDirection) {
 		this.aimDirection = aimDirection;
+	}
+
+	public int getHealth() {
+		return this.health;
+	}
+
+	public void setHealth(int newHealth) {
+		this.health = newHealth;
 	}
 
 }

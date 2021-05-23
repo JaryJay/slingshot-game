@@ -63,7 +63,7 @@ public class GameStateExtrapolator {
 		Vector2f centerToCenter = player.getPosition().copy().sub(projectile.getPosition());
 		float radiuses = player.getHitboxRadius() + projectile.getHitboxRadius();
 		if (centerToCenter.lengthSqaured() < radiuses * radiuses) {
-			System.out.println("HIT");
+			player.setHealth(player.getHealth() - 34);
 		}
 	}
 
