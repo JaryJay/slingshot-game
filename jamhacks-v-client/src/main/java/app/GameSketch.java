@@ -20,9 +20,9 @@ public class GameSketch extends PApplet {
 	private GameData data;
 	private GameLogicTimer timer;
 	private int screen;
-	PImage mainScreenImage;
-	PImage loadingScreenImage;
-	PFont f;
+	private PImage mainScreenImage;
+	private PImage loadingScreenImage;
+	private PFont f;
 	private String textInput = "";
 	private String username = "";
 	private int unsernameIndent;
@@ -77,9 +77,7 @@ public class GameSketch extends PApplet {
 
 	@Override
 	public void keyPressed() {
-		if (key == '\n' && textInput.length() > 0)
-
-		{
+		if (key == '\n' && textInput.length() > 0) {
 			username = textInput;
 			textInput = "";
 			data.setCurrentScreen(2);
@@ -129,12 +127,12 @@ public class GameSketch extends PApplet {
 
 	@Override
 	public void mousePressed() {
-		MousePressedGameInputEvent MousePressedEvent = new MousePressedGameInputEvent(mouseX, mouseY);
+		MousePressedGameInputEvent mousePressedEvent = new MousePressedGameInputEvent(mouseX, mouseY);
 	}
 
 	@Override
 	public void mouseReleased() {
-		MouseReleasedGameInputEvent MouseReleasedEvent = new MouseReleasedGameInputEvent(mouseX, mouseY);
+		MouseReleasedGameInputEvent mouseReleasedEvent = new MouseReleasedGameInputEvent(mouseX, mouseY);
 	}
 
 	private void disiplayMainMenu() {
