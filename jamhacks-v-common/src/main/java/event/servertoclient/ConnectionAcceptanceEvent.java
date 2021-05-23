@@ -12,6 +12,15 @@ public class ConnectionAcceptanceEvent extends ServerToClientGameEvent {
 	private long nextEventId;
 	private long nextActorId;
 	private long id;
+	private int numObstacles;
+
+	public int getNumObstacles() {
+		return numObstacles;
+	}
+
+	public void setNumObstacles(int numObstacles) {
+		this.numObstacles = numObstacles;
+	}
 
 	public long getUserId() {
 		return userId;

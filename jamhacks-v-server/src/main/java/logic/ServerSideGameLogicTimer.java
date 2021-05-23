@@ -92,6 +92,7 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			response.setFrameNumber(state.getId());
 			response.setNextActorId(IdGenerator.generateActorId());
 			response.setNextEventId(IdGenerator.generateEventId());
+			response.setNumObstacles(state.getMap().getObstacles().size());
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
 
 			for (GameObstacle obstacle : state.getMap().getObstacles()) {
