@@ -94,13 +94,10 @@ public class ServerSideGameLogicTimer extends TimestepTimer {
 			response.setNextEventId(IdGenerator.generateEventId());
 			responses.add(new ServerToClientResponse(request.getDetails(), response));
 
-			List<GameObstacle> obstacles = state.getMap().getObstacles();
-			GameObstacle[] obstaclesArr  = new GameObstacle[obstacles.size()];
-			for (int i = 0; i < obstaclesArr.length; i++) {
-				obstaclesArr[i] = obstacles.get(i);
+			for (GameObstacle obstacle : state.getMap().getObstacles()) {
+				STCObstacleInfoEvent obstacleInfo = new STCObstacleInfoEvent(obstacle);
+				responses.add(new ServerToClientResponse(request.getDetails(), obstacleInfo));
 			}
-			STCObstacleInfoEvent obstacleInfo = new STCObstacleInfoEvent(obstaclesArr);
-			responses.add(new ServerToClientResponse(request.getDetails(), obstacleInfo));
 			
 			Collection<GameActor> actors =state.getActorIdToActors().values();
 			GameActor[] actorsArr  = new GameActor[actors.size()];
