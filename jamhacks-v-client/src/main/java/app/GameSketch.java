@@ -126,14 +126,23 @@ public class GameSketch extends PApplet {
 		}
 	}
 
+	private boolean mouseHeld;
+
 	@Override
 	public void mousePressed() {
+		if (this.mouseHeld)
+			return;
+		this.mouseHeld = true;
+
 		MousePressedGameInputEvent mousePressedEvent = new MousePressedGameInputEvent(mouseX, mouseY);
+		inputBuffer.add(mousePressedEvent);
 	}
 
 	@Override
 	public void mouseReleased() {
+		this.mouseHeld = false;
 		MouseReleasedGameInputEvent mouseReleasedEvent = new MouseReleasedGameInputEvent(mouseX, mouseY);
+		inputBuffer.add(mouseReleasedEvent);
 	}
 
 	private void disiplayMainMenu() {

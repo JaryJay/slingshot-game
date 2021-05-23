@@ -8,6 +8,8 @@ import java.util.Queue;
 import event.clienttoserver.ClientToServerGameEvent;
 import event.input.AbstractGameInputEvent;
 import event.input.KeyPressedEvent;
+import event.input.MousePressedGameInputEvent;
+import event.input.MouseReleasedGameInputEvent;
 import event.inputfactory.VelocityChangeEvent;
 import state.MutableGameState;
 
@@ -44,6 +46,10 @@ public class GameLogic {
 				velocityChangeEvent = new VelocityChangeEvent(0f, -5f);
 				break;
 			}
+		} else if (inputEvent instanceof MousePressedGameInputEvent) {
+
+		} else if (inputEvent instanceof MouseReleasedGameInputEvent) {
+
 		}
 
 		return null;
