@@ -14,7 +14,7 @@ public class STCObstacleInfoEvent extends ServerToClientGameEvent {
 		this.obstacle = obstacle;
 	}
 
-	public GameObstacle getObstacles() {
+	public GameObstacle getObstacle() {
 		return obstacle;
 	}
 

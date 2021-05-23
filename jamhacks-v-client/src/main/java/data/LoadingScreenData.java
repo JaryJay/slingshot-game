@@ -27,6 +27,7 @@ public class LoadingScreenData extends GameData {
 	}
 
 	public void setFrameNumberUserIdActorIdEventId(long frameNumber, long userId, long actorId, long eventId) {
+		this.frameNumberUserIdActorIdEventId = new long[4];
 		this.frameNumberUserIdActorIdEventId[0] = frameNumber;
 		this.frameNumberUserIdActorIdEventId[1] = userId;
 		this.frameNumberUserIdActorIdEventId[2] = actorId;

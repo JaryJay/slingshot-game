@@ -43,6 +43,7 @@ public class GameSketch extends PApplet {
 	@Override
 	public void draw() {
 		wrapper.getContext().getVisuals().display(this);
+		Thread.yield();
 	}
 
 	public void run() {
