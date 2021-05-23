@@ -13,7 +13,7 @@ import event.servertoclient.ServerToClientGameEvent;
 import logic.GameLogic;
 import logic.GameLogicTimer;
 import logic.MainScreenLogic;
-import logic.TimeAccumulator;
+import timer.TimeAccumulator;
 import util.LimitedQueue;
 import visuals.GameVisuals;
 import visuals.MainScreenVisuals;

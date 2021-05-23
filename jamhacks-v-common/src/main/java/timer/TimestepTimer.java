@@ -1,4 +1,4 @@
-package logic;
+package timer;
 
 import java.util.concurrent.TimeUnit;
 

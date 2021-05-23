@@ -1,4 +1,4 @@
-package logic;
+package timer;
 
 public class TimeAccumulator {
 

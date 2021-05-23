@@ -1,6 +1,8 @@
 package logic;
 
 import context.GameContextWrapper;
+import timer.TimeAccumulator;
+import timer.TimestepTimer;
 
 public class GameLogicTimer extends TimestepTimer {
 
