@@ -13,6 +13,7 @@ import event.input.GameInputFrame;
 import event.input.KeyPressedGameInputEvent;
 import event.input.MousePressedGameInputEvent;
 import event.input.MouseReleasedGameInputEvent;
+import event.inputfactory.ShootEvent;
 import event.inputfactory.SpawnRequestEvent;
 import event.inputfactory.VelocityChangeEvent;
 import event.servertoclient.ServerToClientGameEvent;
@@ -28,7 +29,7 @@ public class SlingShotLogic extends GameLogic {
 		super(data, inputBuffer, ctsEventBuffer, stcEventBuffer);
 		this.data = (SlingShotData) data;
 		if (this.data.getCurrentInputFrame() == null) {
-			this.data.setCurrentInputFrame(new GameInputFrame());
+			this.data.setCurrentInputFrame(new GameInputFrame(this.data.getCurrentState().getId()));
 		}
 		SpawnRequestEvent spawnRequest = new SpawnRequestEvent(IdGenerator.generateEventId(), System.currentTimeMillis());
 		spawnRequest.setOriginalPlayerId(this.data.getUserId());
@@ -44,10 +45,12 @@ public class SlingShotLogic extends GameLogic {
 		GameState currentState = data.getCurrentState();
 		data.getPastStates().add(currentState);
 		data.setCurrentState(currentState);
-		InputFrameEvent inputFrameEvent = new InputFrameEvent(IdGenerator.generateEventId(), System.currentTimeMillis());
-		inputFrameEvent.setInputFrame(data.getCurrentInputFrame());
-		ctsEventBuffer.add(inputFrameEvent);
-		data.setCurrentInputFrame(new GameInputFrame());
+		if (!data.getCurrentInputFrame().getEvents().isEmpty()) {
+			InputFrameEvent inputFrameEvent = new InputFrameEvent(IdGenerator.generateEventId(), System.currentTimeMillis());
+			inputFrameEvent.setInputFrame(data.getCurrentInputFrame());
+			ctsEventBuffer.add(inputFrameEvent);
+		}
+		data.setCurrentInputFrame(new GameInputFrame(this.data.getCurrentState().getId()));
 	}
 
 	private boolean aimingShot;
@@ -85,6 +88,8 @@ public class SlingShotLogic extends GameLogic {
 				}
 			}
 		} else if (inputEvent instanceof MouseReleasedGameInputEvent) {
+			ShootEvent shootEvent = null;
+
 			if (System.currentTimeMillis() - this.lastShot < 1000)
 				return null;
 			this.lastShot = System.currentTimeMillis();
@@ -92,10 +97,14 @@ public class SlingShotLogic extends GameLogic {
 			MouseReleasedGameInputEvent mouseReleasedEvent = (MouseReleasedGameInputEvent) inputEvent;
 
 			if (this.aimingShot) {
-				Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x,
-						mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
+				Vector2f aimVector = new Vector2f(mouseReleasedEvent.GetMousePos().x - mousePosOnClick.x, mouseReleasedEvent.GetMousePos().y - mousePosOnClick.y);
 				float distance = (float) Math.sqrt((aimVector.x * aimVector.x) + (aimVector.y * aimVector.y));
 				float strength = distance / 20;
+
+				shootEvent.aimVector = aimVector;
+				shootEvent.strength = strength;
+
+				return shootEvent;
 			}
 		}
 
@@ -105,6 +114,7 @@ public class SlingShotLogic extends GameLogic {
 	@Override
 	protected void handleCTSGameEvent(ClientToServerGameEvent event) {
 		if (event instanceof VelocityChangeEvent) {
+			data.getCurrentInputFrame().getEvents().add(event);
 		}
 	}
 

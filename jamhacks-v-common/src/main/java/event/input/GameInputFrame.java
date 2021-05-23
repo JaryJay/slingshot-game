@@ -19,12 +19,18 @@ public class GameInputFrame implements Serializable {
 	 */
 	private static final long serialVersionUID = 6949799180917615452L;
 	private List<ClientToServerGameEvent> events;
+	private long frame;
 
 	/**
 	 * Constructor that initialized the events list.
 	 */
-	public GameInputFrame() {
+	public GameInputFrame(long frame) {
+		this.frame = frame;
 		events = new ArrayList<>();
+	}
+
+	public long getFrame() {
+		return frame;
 	}
 
 	/**

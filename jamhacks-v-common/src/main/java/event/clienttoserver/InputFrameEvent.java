@@ -9,8 +9,17 @@ public class InputFrameEvent extends ClientToServerGameEvent {
 	 */
 	private static final long serialVersionUID = 7713758653827479136L;
 	private GameInputFrame inputFrame;
+	private long frame;
 
 	public InputFrameEvent() {
+	}
+
+	public long getFrame() {
+		return frame;
+	}
+
+	public void setFrame(long frame) {
+		this.frame = frame;
 	}
 
 	public InputFrameEvent(long id, long timeSent) {
@@ -27,7 +36,11 @@ public class InputFrameEvent extends ClientToServerGameEvent {
 
 	@Override
 	public String getDescription() {
-		return "Input frame";
+		String desc = "Input frame:\n";
+		for (ClientToServerGameEvent event : inputFrame.getEvents()) {
+			desc = desc + event.getDescription() + '\n';
+		}
+		return desc;
 	}
 
 }
